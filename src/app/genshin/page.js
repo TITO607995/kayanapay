@@ -24,7 +24,6 @@ export default function GenshinImpact() {
   const [nickname, setNickname] = useState("");
   const [isChecking, setIsChecking] = useState(false);
 
-   khusus GENSHIN IMPACT (Udah pakai IP Local Area)
   useEffect(() => {
     fetch("http://192.168.1.9:8000/api/topup/products?brand=GENSHIN IMPACT")
       .then((res) => res.json())
