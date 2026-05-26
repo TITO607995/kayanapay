@@ -37,7 +37,7 @@ function KelolaHargaContent() {
   const fetchProducts = async (brand) => {
     setIsLoading(true);
     try {
-      const res = await fetch(`http://192.168.1.7:8000/api/topup/products?brand=${encodeURIComponent(brand)}`);
+      const res = await fetch(`http://192.168.1.9:8000/api/topup/products?brand=${encodeURIComponent(brand)}`);
       const data = await res.json();
       if (data.status === "success") {
         setProducts(data.data);
@@ -87,7 +87,7 @@ function KelolaHargaContent() {
     uploadData.append('sku_code', formData.sku_code);
 
     try {
-      const res = await fetch("http://192.168.1.7:8000/api/admin/products/upload-poster", {
+      const res = await fetch("http://192.168.1.9:8000/api/admin/products/upload-poster", {
         method: "POST",
         headers: { "Accept": "application/json" },
         body: uploadData, 
@@ -112,7 +112,7 @@ function KelolaHargaContent() {
     e.preventDefault();
     setIsSaving(true);
     try {
-      const res = await fetch("http://192.168.1.7:8000/api/admin/products/save", {
+      const res = await fetch("http://192.168.1.9:8000/api/admin/products/save", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

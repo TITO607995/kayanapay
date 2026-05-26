@@ -22,7 +22,7 @@ export default function FreeFire() {
   const [openCategory, setOpenCategory] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.1.7:8000/api/topup/products?brand=FREE FIRE")
+    fetch("http://192.168.1.9:8000/api/topup/products?brand=FREE FIRE")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -35,7 +35,7 @@ export default function FreeFire() {
         setIsLoading(false);
       });
 
-    fetch("http://192.168.1.7:8000/api/payment/methods")
+    fetch("http://192.168.1.9:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -53,7 +53,7 @@ export default function FreeFire() {
 
       const timer = setTimeout(async () => {
         try {
-          const res = await fetch(`http://192.168.1.7:8000/api/topup/check-ff?userid=${userId}`);
+          const res = await fetch(`http://192.168.1.9:8000/api/topup/check-ff?userid=${userId}`);
           const data = await res.json();
 
           if (data.status === "success") {
@@ -125,7 +125,7 @@ export default function FreeFire() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.7:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

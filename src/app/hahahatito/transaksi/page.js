@@ -13,7 +13,7 @@ export default function KelolaTransaksiPage() {
   const fetchTransactions = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://192.168.1.7:8000/api/admin/transactions");
+      const res = await fetch("http://192.168.1.9:8000/api/admin/transactions");
       const data = await res.json();
       if (data.status === "success") {
         setTransactions(data.data);
@@ -32,7 +32,7 @@ export default function KelolaTransaksiPage() {
     if (!confirm("Yakin mau paksa status transaksi ini jadi SUKSES? (Pastikan barang udah dikirim manual)")) return;
     
     try {
-      const res = await fetch("http://192.168.1.7:8000/api/admin/transactions/force-success", {
+      const res = await fetch("http://192.168.1.9:8000/api/admin/transactions/force-success", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ reference })
@@ -49,7 +49,7 @@ export default function KelolaTransaksiPage() {
     if (!confirm("Yakin mau nembak ulang API Digiflazz untuk pesanan ini?")) return;
     
     try {
-      const res = await fetch("http://192.168.1.7:8000/api/admin/transactions/retry", {
+      const res = await fetch("http://192.168.1.9:8000/api/admin/transactions/retry", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ reference })

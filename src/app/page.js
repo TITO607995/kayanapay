@@ -30,7 +30,7 @@ export default function Home() {
   useEffect(() => {
     const fetchLiveBanners = async () => {
       try {
-        const res = await fetch("http://192.168.1.7:8000/api/banners");
+        const res = await fetch("http://192.168.1.9:8000/api/banners");
         const data = await res.json();
         if (data.status === "success") {
           setBanners(data.data);
@@ -127,7 +127,7 @@ export default function Home() {
                   className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${index === currentBanner ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
                 >
                   <img 
-                    src={`http://192.168.1.7:8000${bn.image_url}`} 
+                    src={`http://192.168.1.9:8000${bn.image_url}`} 
                     alt={`Promo Banner ${index + 1}`} 
                     className="w-full h-full object-cover"
                   />

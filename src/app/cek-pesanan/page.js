@@ -30,7 +30,7 @@ export default function CekPesanan() {
 
     try {
       const res = await fetch(
-        `http://192.168.1.7:8000/api/topup/invoice/${invoice}`
+        `http://192.168.1.9:8000/api/topup/invoice/${invoice}`
       );
 
       const result = await res.json();

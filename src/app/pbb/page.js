@@ -42,7 +42,7 @@ export default function Pbb() {
   const filteredPbb = pbbList.filter((p) => p.name.toLowerCase().includes(searchTerm.toLowerCase()));
 
   useEffect(() => {
-    fetch("http://192.168.1.7:8000/api/payment/methods").then(res => res.json()).then(data => { if (data.status === "success") setPaymentMethods(data.data); });
+    fetch("http://192.168.1.9:8000/api/payment/methods").then(res => res.json()).then(data => { if (data.status === "success") setPaymentMethods(data.data); });
   }, []);
 
   const formatRupiah = (angka) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(angka);
@@ -51,7 +51,7 @@ export default function Pbb() {
     if (!customerId || !areaCode) return setErrorMessage("Pilih wilayah dan masukkan NOP PBB!");
     setIsChecking(true); setBillData(null); setErrorMessage(null); 
     try {
-      const response = await fetch(`http://192.168.1.7:8000/api/topup/inquiry-postpaid`, {
+      const response = await fetch(`http://192.168.1.9:8000/api/topup/inquiry-postpaid`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ target: customerId, sku_code: areaCode })
       });
@@ -78,7 +78,7 @@ export default function Pbb() {
     }
     setIsCheckoutLoading(true);
     try {
-      const response = await fetch("http://192.168.1.7:8000/api/payment/checkout-postpaid", {
+      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout-postpaid", {
         method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ target: customerId, sku_code: areaCode, ref_id: billData.ref_id, product_name: `PBB ${searchTerm}`, total_amount: grandTotal, payment_method: selectedPayment.paymentMethod, payment_name: selectedPayment.paymentName, whatsapp: whatsapp })
       });

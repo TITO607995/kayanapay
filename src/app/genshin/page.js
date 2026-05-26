@@ -26,7 +26,7 @@ export default function GenshinImpact() {
 
    khusus GENSHIN IMPACT (Udah pakai IP Local Area)
   useEffect(() => {
-    fetch("http://192.168.1.7:8000/api/topup/products?brand=GENSHIN IMPACT")
+    fetch("http://192.168.1.9:8000/api/topup/products?brand=GENSHIN IMPACT")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -39,7 +39,7 @@ export default function GenshinImpact() {
         setIsLoading(false);
       });
 
-    fetch("http://192.168.1.7:8000/api/payment/methods")
+    fetch("http://192.168.1.9:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -58,7 +58,7 @@ export default function GenshinImpact() {
       const timer = setTimeout(async () => {
         try {
           // Udah gue ganti ke check-genshin ya Bro, sesuaikan sama nama route di Laravel lu
-          const res = await fetch(`http://192.168.1.7:8000/api/topup/check-genshin?userid=${userId}&zoneid=${zoneId}`);
+          const res = await fetch(`http://192.168.1.9:8000/api/topup/check-genshin?userid=${userId}&zoneid=${zoneId}`);
           const data = await res.json();
 
           if (data.status === "success") {
@@ -130,7 +130,7 @@ export default function GenshinImpact() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.7:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

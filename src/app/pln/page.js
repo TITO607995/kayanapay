@@ -22,7 +22,7 @@ export default function TokenPln() {
 
   useEffect(() => {
     // Ambil data produk khusus PLN
-    fetch("http://192.168.1.7:8000/api/topup/products?brand=PLN")
+    fetch("http://192.168.1.9:8000/api/topup/products?brand=PLN")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -32,7 +32,7 @@ export default function TokenPln() {
       })
       .catch(() => setIsLoading(false));
 
-    fetch("http://192.168.1.7:8000/api/payment/methods")
+    fetch("http://192.168.1.9:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -51,7 +51,7 @@ export default function TokenPln() {
       const timer = setTimeout(async () => {
         try {
           // Manggil fungsi checkPlnNickname yang udah lu pasang di Laravel
-          const res = await fetch(`http://192.168.1.7:8000/api/topup/check-pln?meter=${meterNumber}`);
+          const res = await fetch(`http://192.168.1.9:8000/api/topup/check-pln?meter=${meterNumber}`);
           const data = await res.json();
 
           if (data.status === "success") {
@@ -106,7 +106,7 @@ export default function TokenPln() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.7:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

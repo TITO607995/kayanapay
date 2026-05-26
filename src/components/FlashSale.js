@@ -8,7 +8,7 @@ export default function FlashSale() {
   useEffect(() => {
     const fetchFlashSale = async () => {
       try {
-        const res = await fetch("http://192.168.1.7:8000/api/flash-sales/public", {
+        const res = await fetch("http://192.168.1.9:8000/api/flash-sales/public", {
             headers: { "Accept": "application/json" }
         });
         
@@ -62,7 +62,7 @@ export default function FlashSale() {
             <div className="bg-slate-900 rounded-3xl overflow-hidden aspect-[3/4] relative border-2 border-transparent group-hover:border-red-500 transition-all shadow-xl">
               
               <img 
-                src={item.image_poster ? `http://192.168.1.7:8000${item.image_poster}` : `https://placehold.co/400x600/1e293b/ef4444?text=${item.sku_code}`} 
+                src={item.image_poster ? `http://192.168.1.9:8000${item.image_poster}` : `https://placehold.co/400x600/1e293b/ef4444?text=${item.sku_code}`} 
                 alt={item.product_name}
                 className="w-full h-full object-cover group-hover:scale-110 transition duration-700"
               />

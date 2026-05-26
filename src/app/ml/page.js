@@ -27,7 +27,7 @@ export default function MobileLegends() {
 
   useEffect(() => {
     // 1. Narik Data Produk (Diamond)
-    fetch("http://192.168.1.7:8000/api/topup/products?brand=MOBILE LEGENDS")
+    fetch("http://192.168.1.9:8000/api/topup/products?brand=MOBILE LEGENDS")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -37,7 +37,7 @@ export default function MobileLegends() {
       .catch((error) => console.error("Gagal narik produk:", error));
 
     // 2. Narik Data Metode Pembayaran Duitku
-    fetch("http://192.168.1.7:8000/api/payment/methods")
+    fetch("http://192.168.1.9:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -59,7 +59,7 @@ export default function MobileLegends() {
 
       const timer = setTimeout(async () => {
         try {
-          const res = await fetch(`http://192.168.1.7:8000/api/topup/check-ml?userid=${userId}&zoneid=${zoneId}`);
+          const res = await fetch(`http://192.168.1.9:8000/api/topup/check-ml?userid=${userId}&zoneid=${zoneId}`);
           const data = await res.json();
 
           if (data.status === "success") {
@@ -130,7 +130,7 @@ export default function MobileLegends() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.7:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
