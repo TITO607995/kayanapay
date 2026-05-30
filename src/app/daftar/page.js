@@ -42,7 +42,7 @@ export default function DaftarPage() {
     }
 
     try {
-      const res = await fetch("http://192.168.1.9:8000/api/member/register", {
+      const res = await fetch("http://192.168.100.17:8000/api/member/register", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

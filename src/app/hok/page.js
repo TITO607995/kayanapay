@@ -22,7 +22,7 @@ export default function HonorOfKings() {
 
   
   useEffect(() => {
-    fetch("http://192.168.1.9:8000/api/topup/products?brand=HONOR OF KINGS")
+    fetch("http://192.168.100.17:8000/api/topup/products?brand=HONOR OF KINGS")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -35,7 +35,7 @@ export default function HonorOfKings() {
         setIsLoading(false);
       });
 
-    fetch("http://192.168.1.9:8000/api/payment/methods")
+    fetch("http://192.168.100.17:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -95,7 +95,7 @@ export default function HonorOfKings() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

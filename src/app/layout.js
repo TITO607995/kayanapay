@@ -2,14 +2,14 @@
 
 import "./globals.css";
 import Link from "next/link";
-import { LogIn, UserRoundPlus, User, Menu, X, Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { Search, User, X, Menu } from "lucide-react";
 
 export default function RootLayout({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false); 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); 
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -24,148 +24,203 @@ export default function RootLayout({ children }) {
   return (
     <html lang="id">
       <head>
-        <title>KayanaPay - Top Up & PPOB Terpercaya</title>
-        <meta name="description" content="Platform top up game dan tagihan sekejap mata." />
+        <title>KayanaPay – Bayar Semua Kebutuhan Digital</title>
+        <meta name="description" content="Top up game, bayar tagihan listrik, air, pulsa, BPJS – cepat, murah, dan aman untuk semua kalangan." />
       </head>
-      <body className="bg-slate-50 text-slate-800 font-sans min-h-screen relative flex flex-col">
-        
-        {!isAdminPage && (
-          <nav className="bg-white border-b border-slate-200 p-3 md:p-4 sticky top-0 z-50 shadow-sm w-full relative">
-            <div className="max-w-7xl mx-auto flex items-center justify-between gap-1 md:gap-4 px-1 md:px-4">
-              
-              <div className="flex-shrink-0">
-                <Link href="/">
-                  <h1 className="text-xl md:text-2xl font-black text-blue-600 tracking-wider italic">
-                    KAYANA<span className="text-sky-400">PAY.</span>
-                  </h1>
-                </Link>
-              </div>
+      <body className="min-h-screen flex flex-col" style={{ backgroundColor: "var(--cream)", color: "var(--text-primary)" }}>
 
-              <div className="flex-1 max-w-xl hidden md:block mx-4 lg:mx-8">
+        {/* ===== NAVBAR ===== */}
+        {!isAdminPage && (
+          <nav className="bg-white sticky top-0 z-50 w-full" style={{ borderBottom: "0.5px solid var(--border)" }}>
+            <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-3">
+
+              {/* Logo */}
+              <Link href="/" className="flex-shrink-0">
+                <span className="text-lg font-semibold" style={{ color: "var(--text-primary)", letterSpacing: "-0.3px" }}>
+                  Kayana<span style={{ color: "var(--teal)" }}>Pay</span>
+                </span>
+              </Link>
+
+              {/* Search — desktop */}
+              <div className="flex-1 max-w-sm hidden md:block mx-4">
                 <div className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--text-tertiary)" }} />
                   <input
                     type="text"
-                    placeholder="Cari game, pulsa, atau voucher..."
-                    className="w-full bg-slate-100 border border-transparent text-slate-800 text-sm rounded-full px-5 py-2.5 pl-11 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all shadow-inner"
+                    placeholder="Cari produk, tagihan, game..."
+                    className="w-full text-sm rounded-2xl pl-9 pr-4 py-2 outline-none transition-all"
+                    style={{
+                      background: "var(--cream-2)",
+                      border: "0.5px solid var(--border)",
+                      color: "var(--text-primary)",
+                    }}
+                    onFocus={e => { e.target.style.background = "#fff"; e.target.style.borderColor = "var(--teal)"; }}
+                    onBlur={e => { e.target.style.background = "var(--cream-2)"; e.target.style.borderColor = "var(--border)"; }}
                   />
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    <Search size={16} strokeWidth={2.5} />
-                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1 md:gap-3 flex-shrink-0">
-                <Link href="/" className="text-sm font-bold text-blue-600 hover:text-blue-700 transition hidden lg:block">
+              {/* Nav links — desktop */}
+              <div className="hidden lg:flex items-center gap-1 ml-auto">
+                <Link href="/" className="text-sm px-3 py-1.5 rounded-lg transition-all" style={{ color: "var(--text-secondary)" }}
+                  onMouseEnter={e => { e.target.style.color = "var(--text-primary)"; e.target.style.background = "var(--cream-2)"; }}
+                  onMouseLeave={e => { e.target.style.color = "var(--text-secondary)"; e.target.style.background = "transparent"; }}>
                   Beranda
                 </Link>
-                <Link href="/cek-pesanan" className="text-sm font-bold text-slate-500 hover:text-blue-600 transition hidden lg:block mr-2">
+                <Link href="/cek-pesanan" className="text-sm px-3 py-1.5 rounded-lg transition-all" style={{ color: "var(--text-secondary)" }}
+                  onMouseEnter={e => { e.target.style.color = "var(--text-primary)"; e.target.style.background = "var(--cream-2)"; }}
+                  onMouseLeave={e => { e.target.style.color = "var(--text-secondary)"; e.target.style.background = "transparent"; }}>
                   Cek Pesanan
                 </Link>
+              </div>
 
-                <button 
+              {/* Auth buttons */}
+              <div className="flex items-center gap-2 ml-auto lg:ml-3">
+                {/* Mobile search toggle */}
+                <button
                   onClick={() => { setIsMobileSearchOpen(!isMobileSearchOpen); setIsMobileMenuOpen(false); }}
-                  className="md:hidden p-1.5 text-slate-600 hover:text-blue-600 transition"
+                  className="md:hidden p-1.5 rounded-lg transition"
+                  style={{ color: "var(--text-secondary)" }}
                 >
-                  <Search size={20} strokeWidth={2.5} />
+                  <Search size={18} />
                 </button>
 
-                <div className="flex items-center gap-1.5 ml-1">
-                  {isLoggedIn ? (
-                    <Link href="/member" className="flex items-center gap-1 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-600 font-bold px-2.5 py-1.5 md:px-3 md:py-2 rounded-lg md:rounded-xl text-[11px] md:text-sm transition shadow-sm">
-                      <User size={16} strokeWidth={2.5} /> <span>Profil</span>
+                {isLoggedIn ? (
+                  <Link href="/member" className="flex items-center gap-1.5 text-sm font-medium px-3 py-1.5 rounded-lg transition"
+                    style={{ color: "var(--teal)", background: "var(--teal-light)", border: "0.5px solid var(--teal-border)" }}>
+                    <User size={15} /> Profil
+                  </Link>
+                ) : (
+                  <>
+                    <Link href="/masuk" className="text-sm font-medium px-3 py-1.5 rounded-lg transition hidden sm:block"
+                      style={{ color: "var(--teal)", background: "var(--teal-light)", border: "0.5px solid var(--teal-border)" }}>
+                      Masuk
                     </Link>
-                  ) : (
-                    <>
-                      <Link href="/masuk" className="text-blue-600 hover:text-blue-700 font-bold text-xs md:text-sm transition px-1.5 py-2">Masuk</Link>
-                      <Link href="/daftar" className="flex items-center gap-1 bg-blue-600 hover:bg-blue-700 text-white font-bold px-2.5 py-1.5 md:px-4 md:py-2 rounded-lg md:rounded-xl text-xs md:text-sm transition shadow-md shadow-blue-600/30">Daftar</Link>
-                    </>
-                  )}
-                </div>
+                    <Link href="/daftar" className="text-sm font-medium px-3 py-1.5 rounded-lg transition text-white"
+                      style={{ background: "var(--teal)" }}>
+                      Daftar
+                    </Link>
+                  </>
+                )}
 
-                <button 
+                {/* Mobile hamburger */}
+                <button
                   onClick={() => { setIsMobileMenuOpen(!isMobileMenuOpen); setIsMobileSearchOpen(false); }}
-                  className="md:hidden ml-1 p-1.5 text-slate-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                  className="lg:hidden p-1.5 rounded-lg transition"
+                  style={{ color: "var(--text-secondary)" }}
                 >
-                  {isMobileMenuOpen ? <X size={24} strokeWidth={2.5} /> : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="9" y2="9"/><line x1="4" x2="20" y1="15" y2="15"/></svg>
-                  )}
+                  {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
               </div>
             </div>
 
+            {/* Mobile search dropdown */}
             {isMobileSearchOpen && (
-              <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-md p-4 animate-slide-down">
-                <div className="relative w-full">
-                  <input type="text" placeholder="Ketik game, pulsa, voucher..." className="w-full bg-slate-100 border border-transparent text-slate-800 text-sm rounded-xl px-5 py-3 pl-11 focus:outline-none focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all shadow-inner" autoFocus />
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"><Search size={18} strokeWidth={2.5} /></div>
+              <div className="md:hidden animate-slide-down px-4 py-3" style={{ borderTop: "0.5px solid var(--border)", background: "#fff" }}>
+                <div className="relative">
+                  <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: "var(--text-tertiary)" }} />
+                  <input
+                    type="text"
+                    autoFocus
+                    placeholder="Cari produk, tagihan, game..."
+                    className="w-full text-sm rounded-xl pl-9 pr-4 py-2.5 outline-none"
+                    style={{ background: "var(--cream-2)", border: "0.5px solid var(--border)", color: "var(--text-primary)" }}
+                  />
                 </div>
               </div>
             )}
+
+            {/* Mobile menu dropdown */}
             {isMobileMenuOpen && (
-              <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-200 shadow-xl px-4 py-6 flex flex-col gap-3 animate-slide-down">
-                <Link href="/#kategori" className="flex items-center gap-3 text-sm font-bold text-slate-700 bg-slate-50 p-4 rounded-xl hover:text-blue-600 hover:bg-blue-50 transition border border-slate-100">
-                  <span className="text-xl">🏠</span> Beranda Utama
-                </Link>
-                <Link href="/cek-pesanan" className="flex items-center gap-3 text-sm font-bold text-slate-700 bg-slate-50 p-4 rounded-xl hover:text-blue-600 hover:bg-blue-50 transition border border-slate-100"><span className="text-xl">🧾</span> Cek Pesanan Saya</Link>
-                <Link href="/daftar-harga" className="flex items-center gap-3 text-sm font-bold text-slate-700 bg-slate-50 p-4 rounded-xl hover:text-blue-600 hover:bg-blue-50 transition border border-slate-100"><span className="text-xl">🏷️</span> Daftar Harga Produk</Link>
+              <div className="lg:hidden animate-slide-down px-4 py-4 flex flex-col gap-2" style={{ borderTop: "0.5px solid var(--border)", background: "#fff" }}>
+                {[
+                  { href: "/", label: "🏠 Beranda" },
+                  { href: "/cek-pesanan", label: "🧾 Cek Pesanan" },
+                  { href: "/masuk", label: "🔑 Masuk" },
+                ].map(item => (
+                  <Link key={item.href} href={item.href}
+                    className="text-sm font-medium px-4 py-3 rounded-xl transition"
+                    style={{ background: "var(--cream-2)", color: "var(--text-primary)", border: "0.5px solid var(--border)" }}>
+                    {item.label}
+                  </Link>
+                ))}
               </div>
             )}
           </nav>
         )}
 
         <div className="flex-grow">{children}</div>
+
+        {/* ===== FOOTER ===== */}
         {!isAdminPage && (
           <>
-            <footer className="bg-white border-t border-slate-200 pt-14 pb-8 mt-10">
-              <div className="container mx-auto px-4 max-w-7xl">
+            <footer className="bg-white mt-16" style={{ borderTop: "0.5px solid var(--border)" }}>
+              <div className="max-w-6xl mx-auto px-4 pt-12 pb-8">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-10">
+
                   <div>
-                    <h2 className="text-2xl font-black text-blue-600 tracking-wider italic mb-4">KAYANAPAY<span className="text-sky-400">.</span></h2>
-                    <p className="text-slate-500 text-sm leading-relaxed">Pusat layanan top up game, pulsa, paket data dan PPOB terpercaya dengan proses otomatis 24 jam untuk seluruh Indonesia.</p>
-                    <div className="flex gap-2 mt-5">
-                      <span className="bg-blue-50 text-blue-600 px-3 py-1 rounded-full text-xs font-semibold">24 Jam</span>
-                      <span className="bg-sky-50 text-sky-600 px-3 py-1 rounded-full text-xs font-semibold">Otomatis</span>
+                    <div className="text-lg font-semibold mb-4" style={{ color: "var(--text-primary)", letterSpacing: "-0.3px" }}>
+                      Kayana<span style={{ color: "var(--teal)" }}>Pay</span>
+                    </div>
+                    <p className="text-sm leading-relaxed mb-5" style={{ color: "var(--text-secondary)" }}>
+                      Pusat layanan top up game, pulsa, paket data, dan PPOB terpercaya. Proses otomatis 24 jam untuk seluruh Indonesia.
+                    </p>
+                    <div className="flex gap-2">
+                      <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ background: "var(--teal-light)", color: "var(--teal)", border: "0.5px solid var(--teal-border)" }}>24 Jam</span>
+                      <span className="text-xs font-medium px-3 py-1 rounded-full" style={{ background: "var(--teal-light)", color: "var(--teal)", border: "0.5px solid var(--teal-border)" }}>Otomatis</span>
                     </div>
                   </div>
+
                   <div>
-                    <h3 className="font-bold text-slate-800 mb-5 uppercase tracking-wider text-sm">Menu</h3>
-                    <ul className="space-y-3 text-sm text-slate-500">
-                      <li><Link href="/" className="hover:text-blue-600 transition">Beranda</Link></li>
-                      <li><Link href="/cek-pesanan" className="hover:text-blue-600 transition">Cek Pesanan</Link></li>
-                      <li><Link href="/daftar-harga" className="hover:text-blue-600 transition">Daftar Harga</Link></li>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: "var(--text-tertiary)" }}>Menu</h3>
+                    <ul className="space-y-3 text-sm" style={{ color: "var(--text-secondary)" }}>
+                      {[["/" ,"Beranda"], ["/cek-pesanan","Cek Pesanan"]].map(([href, label]) => (
+                        <li key={href}><Link href={href} className="hover:underline" style={{ color: "var(--text-secondary)" }}>{label}</Link></li>
+                      ))}
                     </ul>
                   </div>
+
                   <div>
-                    <h3 className="font-bold text-slate-800 mb-5 uppercase tracking-wider text-sm">Layanan</h3>
-                    <ul className="space-y-3 text-sm text-slate-500">
-                      <li>🎮 Top Up Game</li>
-                      <li>📱 Pulsa & Data</li>
-                      <li>💡 PPOB / Tagihan</li>
-                      <li>💳 E-Wallet</li>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: "var(--text-tertiary)" }}>Layanan</h3>
+                    <ul className="space-y-3 text-sm" style={{ color: "var(--text-secondary)" }}>
+                      <li>Top Up Game</li>
+                      <li>Pulsa &amp; Data</li>
+                      <li>PPOB / Tagihan</li>
+                      <li>Voucher Digital</li>
                     </ul>
                   </div>
+
                   <div>
-                    <h3 className="font-bold text-slate-800 mb-5 uppercase tracking-wider text-sm">Hubungi Kami</h3>
-                    <ul className="space-y-3 text-sm text-slate-500">
-                      <li><a href="https://wa.me/6285236509562" target="_blank" rel="noopener noreferrer" className="hover:text-green-600 transition">WhatsApp</a></li>
-                      <li><a href="https://instagram.com/rfdto._" target="_blank" rel="noopener noreferrer" className="hover:text-pink-500 transition">Instagram</a></li>
+                    <h3 className="text-xs font-semibold uppercase tracking-wider mb-5" style={{ color: "var(--text-tertiary)" }}>Hubungi Kami</h3>
+                    <ul className="space-y-3 text-sm">
+                      <li><a href="https://wa.me/6285236509562" target="_blank" rel="noopener noreferrer" style={{ color: "var(--teal)" }}>WhatsApp</a></li>
+                      <li><a href="https://instagram.com/rfdto._" target="_blank" rel="noopener noreferrer" style={{ color: "var(--teal)" }}>Instagram</a></li>
                     </ul>
                   </div>
                 </div>
-                <div className="border-t border-slate-100 pt-7 flex flex-col lg:flex-row justify-between items-center gap-5">
-                  <p className="text-xs text-slate-400 text-center lg:text-left">© 2026 KAYANAPAY • Aman • Cepat • Terpercaya</p>
-                  <div className="flex items-center gap-3 text-2xl opacity-70">💳 🏦 📱 ⚡</div>
+
+                <div className="pt-6 flex flex-col sm:flex-row justify-between items-center gap-3" style={{ borderTop: "0.5px solid var(--border)" }}>
+                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>© 2026 KayanaPay · Aman · Cepat · Terpercaya</p>
+                  <p className="text-xs" style={{ color: "var(--text-tertiary)" }}>Transaksi terenkripsi & dilindungi</p>
                 </div>
               </div>
             </footer>
 
-            <a href="https://wa.me/6285236509562" target="_blank" rel="noopener noreferrer" className="fixed bottom-6 right-6 z-[99] flex items-center justify-center w-14 h-14 bg-gradient-to-tr from-green-500 to-green-400 rounded-full shadow-[0_8px_30px_rgba(34,197,94,0.4)] hover:scale-110 hover:-translate-y-1 transition-all duration-300 group">
-              <span className="absolute -top-1 -right-1 flex h-4 w-4"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span><span className="relative inline-flex rounded-full h-4 w-4 bg-red-500 border-2 border-white"></span></span>
-              <span className="text-3xl drop-shadow-md">👨‍💻</span>
+            {/* WhatsApp floating button */}
+            <a
+              href="https://wa.me/6285236509562"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="fixed bottom-6 right-5 z-50 flex items-center justify-center w-12 h-12 rounded-full text-white shadow-lg transition-transform hover:-translate-y-1 hover:scale-105"
+              style={{ background: "var(--teal)" }}
+              title="Hubungi CS via WhatsApp"
+            >
+              <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
             </a>
           </>
         )}
-
       </body>
     </html>
   );

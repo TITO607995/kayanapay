@@ -18,7 +18,7 @@ export default function BpjsTK() {
   const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.1.9:8000/api/payment/methods").then(r => r.json()).then(d => { if (d.status === "success") setPaymentMethods(d.data); });
+    fetch("http://192.168.100.17:8000/api/payment/methods").then(r => r.json()).then(d => { if (d.status === "success") setPaymentMethods(d.data); });
   }, []);
 
   const formatRupiah = (angka) => new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(angka);
@@ -27,7 +27,7 @@ export default function BpjsTK() {
     if (!customerId) return setErrorMessage("Masukkan NIK / No Kepesertaan!");
     setIsChecking(true); setBillData(null); setErrorMessage(null); 
     try {
-      const response = await fetch(`http://192.168.1.9:8000/api/topup/inquiry-postpaid`, {
+      const response = await fetch(`http://192.168.100.17:8000/api/topup/inquiry-postpaid`, {
         method: "POST", headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ target: customerId, sku_code: skuCode })
       });
@@ -54,7 +54,7 @@ export default function BpjsTK() {
     }
     setIsCheckoutLoading(true);
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout-postpaid", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout-postpaid", {
         method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ target: customerId, sku_code: skuCode, ref_id: billData.ref_id, product_name: `BPJS TK (${skuCode === 'BPJSKPU' ? 'PU' : 'BPU'})`, total_amount: grandTotal, payment_method: selectedPayment.paymentMethod, payment_name: selectedPayment.paymentName, whatsapp: whatsapp })
       });

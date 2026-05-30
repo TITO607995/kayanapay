@@ -16,7 +16,7 @@ export default function KelolaBannerPage() {
   const fetchBanners = async () => {
     setIsLoading(true);
     try {
-      const res = await fetch("http://192.168.1.9:8000/api/banners");
+      const res = await fetch("http://192.168.100.17:8000/api/banners");
       const data = await res.json();
       if (data.status === "success") {
         setBanners(data.data);
@@ -43,7 +43,7 @@ export default function KelolaBannerPage() {
     formData.append("target_link", targetLink);
 
     try {
-      const res = await fetch("http://192.168.1.9:8000/api/admin/banners/upload", {
+      const res = await fetch("http://192.168.100.17:8000/api/admin/banners/upload", {
         method: "POST",
         headers: { "Accept": "application/json" },
         body: formData,
@@ -71,7 +71,7 @@ export default function KelolaBannerPage() {
     if (!confirm("Yakin mau hapus banner ini dari beranda depan, Bro?")) return;
 
     try {
-      const res = await fetch(`http://192.168.1.9:8000/api/admin/banners/${id}`, {
+      const res = await fetch(`http://192.168.100.17:8000/api/admin/banners/${id}`, {
         method: "DELETE",
         headers: { "Accept": "application/json" }
       });
@@ -143,7 +143,7 @@ export default function KelolaBannerPage() {
             {banners.map((bn) => (
               <div key={bn.id} className="border border-slate-200 rounded-2xl overflow-hidden bg-slate-50 relative group shadow-sm">
                 <img 
-                  src={`http://192.168.1.9:8000${bn.image_url}`} 
+                  src={`http://192.168.100.17:8000${bn.image_url}`} 
                   alt="Kayana Banner" 
                   className="w-full aspect-[21/9] object-cover"
                 />

@@ -23,7 +23,7 @@ export default function MagicChess() {
 
   useEffect(() => {
     // 1. Narik Data Produk (Diamond)
-    fetch("http://192.168.1.9:8000/api/topup/products?brand=MAGIC CHESS")
+    fetch("http://192.168.100.17:8000/api/topup/products?brand=MAGIC CHESS")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -33,7 +33,7 @@ export default function MagicChess() {
       .catch((error) => console.error("Gagal narik produk:", error));
 
     // 2. Narik Data Metode Pembayaran Duitku
-    fetch("http://192.168.1.9:8000/api/payment/methods")
+    fetch("http://192.168.100.17:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -96,7 +96,7 @@ export default function MagicChess() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

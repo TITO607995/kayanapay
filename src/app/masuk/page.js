@@ -32,7 +32,7 @@ export default function MasukPage() {
     const cleanUsername = formData.username.replace(/\s+/g, '').toLowerCase();
 
     try {
-      const res = await fetch("http://192.168.1.9:8000/api/member/login", {
+      const res = await fetch("http://192.168.100.17:8000/api/member/login", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

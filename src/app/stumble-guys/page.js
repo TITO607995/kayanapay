@@ -22,7 +22,7 @@ export default function StumbleGuys() {
 
   
   useEffect(() => {
-    fetch("http://192.168.1.9:8000/api/topup/products?brand=STUMBLE GUYS")
+    fetch("http://192.168.100.17:8000/api/topup/products?brand=STUMBLE GUYS")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -35,7 +35,7 @@ export default function StumbleGuys() {
         setIsLoading(false);
       });
 
-    fetch("http://192.168.1.9:8000/api/payment/methods")
+    fetch("http://192.168.100.17:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -95,7 +95,7 @@ export default function StumbleGuys() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

@@ -54,7 +54,7 @@ export default function Pdam() {
   );
 
   useEffect(() => {
-    fetch("http://192.168.1.9:8000/api/payment/methods")
+    fetch("http://192.168.100.17:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -79,7 +79,7 @@ export default function Pdam() {
     setErrorMessage(null); 
 
     try {
-      const response = await fetch(`http://192.168.1.9:8000/api/topup/inquiry-postpaid`, {
+      const response = await fetch(`http://192.168.100.17:8000/api/topup/inquiry-postpaid`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -131,7 +131,7 @@ export default function Pdam() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout-postpaid", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout-postpaid", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({

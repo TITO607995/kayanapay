@@ -22,7 +22,7 @@ export default function MemberDashboard() {
       }
 
       try {
-        const res = await fetch("http://192.168.1.9:8000/api/member/dashboard", {
+        const res = await fetch("http://192.168.100.17:8000/api/member/dashboard", {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`, // Bawa tiket VIP nya ke Laravel
@@ -54,7 +54,7 @@ export default function MemberDashboard() {
     const token = localStorage.getItem("kayana_token");
     if (token) {
       try {
-        await fetch("http://192.168.1.9:8000/api/member/logout", {
+        await fetch("http://192.168.100.17:8000/api/member/logout", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`,

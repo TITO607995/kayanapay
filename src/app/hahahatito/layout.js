@@ -30,7 +30,7 @@ export default function AdminLayout({ children }) {
 
     try {
       // FRONTEND CUMA NEMBAK DATA KE LARAVEL, GAK ADA PASSWORD HARDCODE DI SINI
-      const res = await fetch("http://192.168.1.9:8000/api/admin/login", {
+      const res = await fetch("http://192.168.100.17:8000/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({ username, password })

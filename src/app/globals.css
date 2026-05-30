@@ -1,1 +1,55 @@
 @import "tailwindcss";
+
+:root {
+  --cream: #FAFAF8;
+  --cream-2: #F5F3EE;
+  --cream-3: #EDEAE3;
+  --teal: #1A7A5E;
+  --teal-hover: #22956F;
+  --teal-light: #F0F7F4;
+  --teal-border: #B8DDD4;
+  --text-primary: #1C1917;
+  --text-secondary: #6B6560;
+  --text-tertiary: #9E9890;
+  --border: #E8E4DC;
+  --border-dark: #D4CFC6;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--cream);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans, ui-sans-serif, system-ui, sans-serif);
+}
+
+/* Scrollbar custom */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--cream-2); }
+::-webkit-scrollbar-thumb { background: var(--teal-border); border-radius: 99px; }
+
+/* Animasi slide-down untuk mobile menu */
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-down { animation: slide-down 0.18s ease-out both; }
+
+/* Animasi fade-in untuk tab content */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.2s ease-out both; }
+
+/* Marquee flash sale */
+@keyframes marquee-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 30s linear infinite;
+}
+.animate-marquee:hover { animation-play-state: paused; }

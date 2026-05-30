@@ -21,7 +21,7 @@ export default function Telkomsel() {
   const [openCategory, setOpenCategory] = useState(null);
 
   useEffect(() => {
-    fetch("http://192.168.1.9:8000/api/topup/products?brand=TELKOMSEL")
+    fetch("http://192.168.100.17:8000/api/topup/products?brand=TELKOMSEL")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -34,7 +34,7 @@ export default function Telkomsel() {
         setIsLoading(false);
       });
 
-    fetch("http://192.168.1.9:8000/api/payment/methods")
+    fetch("http://192.168.100.17:8000/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -77,7 +77,7 @@ export default function Telkomsel() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.1.9:8000/api/payment/checkout", {
+      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
