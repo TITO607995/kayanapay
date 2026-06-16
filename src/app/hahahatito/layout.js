@@ -8,6 +8,7 @@ export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,11 +16,8 @@ export default function AdminLayout({ children }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Cek apakah ada token admin yang tersimpan
     const adminToken = localStorage.getItem("kayana_admin_token");
-    if (adminToken) {
-      setIsAuthenticated(true);
-    }
+    if (adminToken) setIsAuthenticated(true);
     setIsChecking(false);
   }, []);
 
@@ -27,28 +25,22 @@ export default function AdminLayout({ children }) {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg("");
-
     try {
-      // FRONTEND CUMA NEMBAK DATA KE LARAVEL, GAK ADA PASSWORD HARDCODE DI SINI
-      const res = await fetch("http://192.168.100.17:8000/api/admin/login", {
+      const res = await fetch("https://kayanamart.my.id/api/admin/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({ username, password })
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ username, password }),
       });
-
       const data = await res.json();
-
       if (data.status === "success") {
-        // Kalau Laravel bilang oke, simpan token dari Laravel
         localStorage.setItem("kayana_admin_token", data.token);
         setIsAuthenticated(true);
       } else {
         setErrorMsg(data.message || "Username atau Password salah.");
       }
-    } catch (error) {
-      setErrorMsg("Gagal terhubung ke server keamanan.");
+    } catch {
+      setErrorMsg("Gagal terhubung ke server.");
     }
-
     setIsLoading(false);
   };
 
@@ -59,93 +51,181 @@ export default function AdminLayout({ children }) {
     setPassword("");
   };
 
-  if (isChecking) return <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white font-bold">Memuat Sistem Keamanan...</div>;
+  // ── Loading ───────────────────────────────────────────────────────────────
+  if (isChecking) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <p className="text-sm text-slate-500 animate-pulse">Memuat sistem...</p>
+      </div>
+    );
+  }
 
+  // ── Login ─────────────────────────────────────────────────────────────────
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-slate-800 italic">
-              KAYANA<span className="text-blue-600">ADMIN</span>
-            </h2>
-            <p className="text-slate-500 text-sm mt-2">Pusat Kendali. Masukkan kredensial Anda.</p>
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4">
+        <div className="bg-white border border-slate-200 rounded-2xl p-8 w-full max-w-sm">
+          <div className="mb-6">
+            <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mb-1">Panel Admin</p>
+            <h2 className="text-xl font-semibold text-slate-800">KayanaPay</h2>
           </div>
 
           {errorMsg && (
-            <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-6 border border-red-100 text-center font-bold">
+            <div className="text-xs text-red-600 bg-red-50 border border-red-100 rounded-xl p-3 mb-4">
               {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="text-sm font-bold text-slate-700 mb-1 block">Username</label>
-              <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" placeholder="Username Admin" required />
+              <label className="text-xs font-medium text-slate-500 block mb-1.5">Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-400 transition"
+                placeholder="Username admin"
+                required
+              />
             </div>
             <div>
-              <label className="text-sm font-bold text-slate-700 mb-1 block">Password</label>
-              <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200" placeholder="Password Admin" required />
+              <label className="text-xs font-medium text-slate-500 block mb-1.5">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:border-slate-400 transition"
+                placeholder="Password admin"
+                required
+              />
             </div>
-            <button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-600/30 mt-4 disabled:bg-blue-400">
-              {isLoading ? "Memverifikasi..." : "Masuk Panel Admin"}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-slate-900 hover:bg-slate-700 text-white text-sm font-medium py-2.5 rounded-xl transition disabled:opacity-50 mt-2"
+            >
+              {isLoading ? "Memverifikasi..." : "Masuk"}
             </button>
           </form>
-          
-          <div className="mt-6 text-center">
-            <Link href="/" className="text-sm text-slate-400 hover:text-blue-600 transition">← Kembali ke Web Pembeli</Link>
+
+          <div className="mt-5 text-center">
+            <Link href="/" className="text-xs text-slate-400 hover:text-slate-600 transition">
+              ← Kembali ke web utama
+            </Link>
           </div>
         </div>
       </div>
     );
   }
 
-  // TAMPILAN DASHBOARD ADMIN
+  // ── Nav items ─────────────────────────────────────────────────────────────
+  const navItems = [
+    { href: "/hahahatito",              icon: "📊", label: "Dashboard",          exact: true  },
+    { href: "/hahahatito/transaksi",    icon: "🧾", label: "Transaksi",          exact: false },
+    { href: "/hahahatito/harga",        icon: "💰", label: "Kelola Harga",       exact: false },
+    { href: "/hahahatito/promo",        icon: "🎟️", label: "Kode Promo",         exact: false },
+    { href: "/hahahatito/banner",       icon: "🖼️", label: "Banner Web",         exact: false },
+    { href: "/hahahatito/pengaturan",   icon: "⚙️", label: "Pengaturan",         exact: false },
+  ];
+
+  const isActive = (item) =>
+    item.exact ? pathname === item.href : pathname.startsWith(item.href);
+
+  // ── Dashboard ─────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-100 flex">
-      <aside className="w-64 bg-slate-900 text-white flex flex-col hidden md:flex">
-        <div className="p-6 border-b border-slate-800">
-          <h2 className="text-2xl font-black text-white italic tracking-wider">
-            KAYANA<span className="text-sky-400">ADMIN</span>
-          </h2>
-          <p className="text-slate-400 text-xs mt-1">Control Panel v1.0</p>
+
+      {/* Overlay mobile */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-20 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`
+          fixed md:static inset-y-0 left-0 z-30
+          w-56 bg-white border-r border-slate-200
+          flex flex-col
+          transition-transform duration-200
+          ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        `}
+      >
+        {/* Logo */}
+        <div className="h-14 flex items-center px-5 border-b border-slate-100">
+          <span className="text-sm font-semibold text-slate-800 tracking-tight">
+            Kayana<span className="text-emerald-600">Admin</span>
+          </span>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
-          <Link href="/hahahatito" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${pathname === '/hahahatito' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <span>📊</span> Dashboard
-          </Link>
-          <Link href="/hahahatito/harga" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${pathname.includes('/hahahatito/harga') ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <span>💰</span> Kelola Harga & Diskon
-          </Link>
-          <Link href="/hahahatito/banner" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${pathname.includes('/hahahatito/banner') ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <span>🖼️</span> Kelola Banner Web
-          </Link>
-          <Link href="/hahahatito/transaksi" className={`flex items-center gap-3 px-4 py-3 rounded-xl transition ${pathname.includes('/hahahatito/transaksi') ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}`}>
-            <span>🧾</span> Kelola Transaksi
-          </Link>
+        {/* Nav */}
+        <nav className="flex-1 py-3 px-3 space-y-0.5 overflow-y-auto">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              onClick={() => setSidebarOpen(false)}
+              className={`
+                flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition
+                ${isActive(item)
+                  ? "bg-slate-900 text-white font-medium"
+                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                }
+              `}
+            >
+              <span className="text-base leading-none">{item.icon}</span>
+              {item.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="p-4 border-t border-slate-800">
-          <button onClick={handleLogout} className="flex items-center justify-center gap-2 w-full bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white py-3 rounded-xl transition font-bold text-sm">
-            🚪 Keluar Panel
+        {/* Footer sidebar */}
+        <div className="p-3 border-t border-slate-100">
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 w-full px-3 py-2.5 rounded-xl text-sm text-slate-500 hover:bg-red-50 hover:text-red-600 transition"
+          >
+            🚪 Keluar
           </button>
         </div>
       </aside>
 
-      <main className="flex-1 flex flex-col h-screen overflow-y-auto">
-        <header className="bg-white border-b border-slate-200 h-16 flex items-center justify-between px-4 md:px-8 sticky top-0 z-10">
-          <h1 className="font-bold text-slate-700">Mode Administrator</h1>
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">T</div>
-            <span className="text-sm font-bold text-slate-600">Tito</span>
+      {/* Main */}
+      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-y-auto">
+
+        {/* Topbar */}
+        <header className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 md:px-6 sticky top-0 z-10 flex-shrink-0">
+          {/* Hamburger mobile */}
+          <button
+            className="md:hidden p-1.5 rounded-lg hover:bg-slate-100 transition"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <svg className="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+
+          {/* Page title — ambil dari nav items */}
+          <span className="text-sm font-medium text-slate-700">
+            {navItems.find(isActive)?.label ?? "Admin"}
+          </span>
+
+          {/* Avatar */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-semibold">
+              T
+            </div>
+            <span className="text-sm text-slate-600 hidden sm:block">Tito</span>
           </div>
         </header>
 
-        <div className="p-4 md:p-8">
+        {/* Content */}
+        <div className="flex-1 p-4 md:p-6">
           {children}
         </div>
-      </main>
+      </div>
     </div>
   );
 }

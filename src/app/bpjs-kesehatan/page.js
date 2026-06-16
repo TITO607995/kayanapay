@@ -15,15 +15,62 @@ export default function BpjsKesehatan() {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState("");
 
   useEffect(() => {
-    fetch("http://192.168.100.17:8000/api/payment/methods")
+    fetch("https://kayanamart.my.id/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") setPaymentMethods(data.data);
       })
       .catch((error) => console.error("Gagal narik payment:", error));
   }, []);
+
+  const handleApplyPromo = async (e) => {
+    e.preventDefault();
+
+    if (!promoCode.trim()) {
+      setPromoError("Masukkan kode promo dulu.");
+      return;
+    }
+
+    setPromoLoading(true);
+    setPromoError("");
+
+    try {
+      const res = await fetch(
+        `https://kayanamart.my.id/api/promo/check?code=${promoCode.toUpperCase()}`
+      );
+      const data = await res.json();
+
+      if (data.status === "success") {
+        setAppliedPromo(promoCode.toUpperCase());
+        setDiscountAmount(parseInt(data.data.discount) || 0);
+        setPromoError("");
+        alert("✅ Promo berhasil dipakai!");
+      } else {
+        setAppliedPromo(null);
+        setDiscountAmount(0);
+        setPromoError("❌ " + (data.message || "Kode promo tidak valid."));
+      }
+    } catch (error) {
+      setPromoError("❌ Gagal cek promo, coba lagi.");
+      console.error(error);
+    }
+
+    setPromoLoading(false);
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setDiscountAmount(0);
+    setPromoCode("");
+    setPromoError("");
+  };
 
   const formatRupiah = (angka) => {
     return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(angka);
@@ -40,7 +87,7 @@ export default function BpjsKesehatan() {
     setErrorMessage(null); 
 
     try {
-      const response = await fetch(`http://192.168.100.17:8000/api/topup/inquiry-postpaid`, {
+      const response = await fetch(`https://kayanamart.my.id/api/topup/inquiry-postpaid`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -60,7 +107,7 @@ export default function BpjsKesehatan() {
 
   const billAmount = billData ? parseInt(billData.total_tagihan) : 0;
   const adminFee = selectedPayment ? parseInt(selectedPayment.totalFee) : 0;
-  const grandTotal = billAmount + adminFee;
+  const grandTotal = Math.max(0, billAmount + adminFee - discountAmount);
 
   const groupedPayments = paymentMethods.reduce((acc, pay) => {
     let category = "Lainnya";
@@ -87,7 +134,7 @@ export default function BpjsKesehatan() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout-postpaid", {
+      const response = await fetch("https://kayanamart.my.id/api/payment/checkout-postpaid", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
@@ -99,6 +146,8 @@ export default function BpjsKesehatan() {
           payment_method: selectedPayment.paymentMethod,
           payment_name: selectedPayment.paymentName,
           whatsapp: whatsapp,
+          promo_code: appliedPromo || null,
+          discount_amount: discountAmount,
         })
       });
 
@@ -210,16 +259,54 @@ export default function BpjsKesehatan() {
                 </div>
               </div>
 
-              {/* STEP 3: Kontak */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
                   Kode Promo <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                 </h3>
-                <div className="flex gap-2">
-                  <input type="text" placeholder="Masukkan kode promo" className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition uppercase" />
-                  <button className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 rounded-xl transition shadow-md">Gunakan</button>
-                </div>
+
+                {appliedPromo ? (
+                  <div className="rounded-xl p-3.5" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-bold text-emerald-700">✓ {appliedPromo}</p>
+                        <p className="text-xs mt-1 text-emerald-600">
+                          Diskon: {formatRupiah(discountAmount)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleRemovePromo}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium transition"
+                        style={{ background: "#F3E8FF", color: "#7C3AED", border: "0.5px solid #D8B4FE" }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyPromo} className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Masukkan kode promo"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition uppercase"
+                    />
+                    <button
+                      type="submit"
+                      disabled={promoLoading || !promoCode.trim()}
+                      className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 rounded-xl transition shadow-md disabled:opacity-50"
+                    >
+                      {promoLoading ? "Cek..." : "Pakai"}
+                    </button>
+                  </form>
+                )}
+
+                {promoError && (
+                  <p className="text-xs font-medium text-red-600 mt-2">
+                    {promoError}
+                  </p>
+                )}
               </div>
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
@@ -232,7 +319,7 @@ export default function BpjsKesehatan() {
                   placeholder="Nomor WhatsApp (08...)" 
                   value={whatsapp || ""}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition" 
                 />
                 <p className="text-xs text-slate-400 mt-2">Bukti pembelian akan dikirimkan melalui WhatsApp.</p>
               </div>

@@ -14,7 +14,7 @@ export default function InvoicePage() {
     const fetchInvoice = async () => {
         if (!reference) return;
         try {
-            const res = await fetch(`http://localhost:8000/api/invoice/${reference}`);
+            const res = await fetch(`https://kayanamart.my.id/api/invoice/${reference}`);
             const json = await res.json();
             
             if (json.status === 'success') {
@@ -40,131 +40,178 @@ export default function InvoicePage() {
         return () => clearInterval(interval);
     }, [reference, transaction?.status]);
 
-    // Bahasa Manusia Only, Database disembunyiin!
+    // Redesigned: Premium Status UI Mapping (Clean, Soft, No Emojis)
     const getStatusStyle = (status) => {
         switch(status) {
             case 'SUKSES': 
-                return { badge: 'bg-emerald-100 text-emerald-700 border-emerald-300', text: 'Pembayaran Berhasil', icon: '✅' };
+                return { 
+                    bg: 'bg-emerald-50/50', 
+                    text: 'text-emerald-700', 
+                    ring: 'ring-1 ring-inset ring-emerald-600/20',
+                    dot: 'bg-emerald-500',
+                    label: 'Pembayaran Berhasil' 
+                };
             case 'PAID': 
             case 'PENDING': 
-                return { badge: 'bg-amber-100 text-amber-700 border-amber-300', text: 'Sedang Diproses', icon: '⏳' };
+                return { 
+                    bg: 'bg-amber-50/50', 
+                    text: 'text-amber-700', 
+                    ring: 'ring-1 ring-inset ring-amber-600/20',
+                    dot: 'bg-amber-500',
+                    label: 'Sedang Diproses' 
+                };
             case 'UNPAID': 
-                return { badge: 'bg-rose-100 text-rose-700 border-rose-300', text: 'Menunggu Pembayaran', icon: '💳' };
+                return { 
+                    bg: 'bg-blue-50/50', 
+                    text: 'text-blue-700', 
+                    ring: 'ring-1 ring-inset ring-blue-600/20',
+                    dot: 'bg-blue-500',
+                    label: 'Menunggu Pembayaran' 
+                };
             case 'GAGAL': 
-                return { badge: 'bg-slate-200 text-slate-700 border-slate-400', text: 'Transaksi Gagal', icon: '❌' };
+                return { 
+                    bg: 'bg-rose-50/50', 
+                    text: 'text-rose-700', 
+                    ring: 'ring-1 ring-inset ring-rose-600/20',
+                    dot: 'bg-rose-500',
+                    label: 'Transaksi Gagal' 
+                };
             default: 
-                return { badge: 'bg-gray-100 text-gray-700 border-gray-300', text: 'Status Tidak Diketahui', icon: '❓' };
+                return { 
+                    bg: 'bg-slate-50', 
+                    text: 'text-slate-600', 
+                    ring: 'ring-1 ring-inset ring-slate-500/20',
+                    dot: 'bg-slate-400',
+                    label: 'Status Tidak Diketahui' 
+                };
         }
     };
 
+    // Redesigned: Premium Loading State
     if (loading) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-slate-200 border-t-teal-600 mb-4"></div>
-            <p className="font-bold text-slate-500 animate-pulse">Memuat Struk...</p>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-[#F8FAFC]">
+            <div className="w-8 h-8 border-[3px] border-slate-200 border-t-slate-800 rounded-full animate-spin mb-6"></div>
+            <p className="text-[13px] font-medium text-slate-500 tracking-wide animate-pulse">Memuat detail transaksi...</p>
         </div>
     );
 
+    // Redesigned: Premium Error/Not Found State
     if (!transaction) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50">
-            <span className="text-6xl mb-4">🕵️‍♂️</span>
-            <h2 className="text-2xl font-black text-slate-800">Waduh!</h2>
-            <p className="text-slate-500 font-medium mb-6">Transaksi tidak ditemukan.</p>
-            <Link href="/" className="px-6 py-3 bg-teal-600 text-white rounded-xl font-bold shadow-lg shadow-teal-600/30 hover:bg-teal-700 transition-all hover:-translate-y-1">
-                Kembali ke Beranda
-            </Link>
+        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] p-4">
+            <div className="bg-white p-8 md:p-10 rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 max-w-[400px] w-full text-center">
+                <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 ring-1 ring-inset ring-slate-100">
+                    <svg className="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </div>
+                <h2 className="text-lg font-semibold text-slate-900 mb-2">Transaksi Tidak Ditemukan</h2>
+                <p className="text-[14px] text-slate-500 mb-8 leading-relaxed">Kami tidak dapat menemukan detail untuk referensi transaksi ini.</p>
+                <Link href="/" className="inline-flex items-center justify-center w-full py-3.5 bg-slate-900 text-white text-[14px] font-medium rounded-xl hover:bg-slate-800 transition-colors shadow-sm">
+                    Kembali ke Beranda
+                </Link>
+            </div>
         </div>
     );
 
-    const statusInfo = getStatusStyle(transaction.status);
+    const statusStyle = getStatusStyle(transaction.status);
 
     return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 font-sans py-12 relative">
-            <div className="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl shadow-slate-200/50 border border-slate-100 overflow-hidden relative z-10">
+        <div className="min-h-screen bg-[#F8FAFC] flex flex-col items-center justify-center p-4 md:py-12 font-sans selection:bg-slate-200 selection:text-slate-900">
+            
+            {/* Main Premium Card */}
+            <div className="w-full max-w-[440px] bg-white rounded-[28px] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.08)] ring-1 ring-slate-100/80 overflow-hidden relative">
                 
-                <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-br from-teal-500 to-emerald-700 rounded-b-[3rem] shadow-inner"></div>
-
-                <div className="relative z-10 pt-8 px-6 pb-8 md:px-10">
+                {/* Content Section */}
+                <div className="px-6 py-8 md:px-10 md:pt-10 md:pb-8">
                     
-                    <div className="text-center mb-8">
-                        <div className="bg-white p-4 rounded-full inline-flex items-center justify-center shadow-lg shadow-slate-200/50 mb-4 border-2 border-slate-50 w-20 h-20">
-                            <span className="text-4xl">{statusInfo.icon}</span>
-                        </div>
-                        <h1 className="text-3xl font-black text-slate-800 tracking-tight">KAYANAPAY</h1>
-                        <p className="text-slate-500 text-sm font-semibold mt-1">INV: <span className="font-mono text-teal-600 bg-teal-50 px-2 py-0.5 rounded-md">{transaction.reference}</span></p>
-                    </div>
-
-                    <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200 mb-6 text-center">
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-2">Status Pesanan</p>
-                        {/* Tulisan RAW database udah ilang, sisa bahasa manusianya aja! */}
-                        <div className={`inline-block px-5 py-2 rounded-full text-sm font-black border-2 shadow-sm ${statusInfo.badge} ${['UNPAID', 'PAID', 'PENDING'].includes(transaction.status) ? 'animate-pulse' : ''}`}>
-                            {statusInfo.text}
+                    {/* Header: Brand & Ref */}
+                    <div className="flex justify-between items-center mb-10">
+                        <span className="text-[11px] font-bold tracking-[0.2em] text-slate-400 uppercase">KayanaPay</span>
+                        <div className="flex items-center gap-2">
+                            <span className="text-[12px] text-slate-400">Ref.</span>
+                            <span className="text-[13px] font-medium text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md ring-1 ring-inset ring-slate-200/50">{transaction.reference}</span>
                         </div>
                     </div>
 
-                    <div className="border-b-2 border-dashed border-slate-200 pb-6 mb-6">
-                        <div className="flex flex-col items-center justify-center">
-                            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-1">Total Pembayaran</p>
-                            <p className="text-4xl font-black text-slate-800">
-                                <span className="text-xl text-slate-400 mr-1">Rp</span>
+                    {/* Status Display (Center Stage) */}
+                    <div className="flex flex-col items-center justify-center mb-8">
+                        <div className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[13px] font-medium ${statusStyle.bg} ${statusStyle.text} ${statusStyle.ring}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${statusStyle.dot} ${['UNPAID', 'PAID', 'PENDING'].includes(transaction.status) ? 'animate-pulse' : ''}`}></span>
+                            {statusStyle.label}
+                        </div>
+                    </div>
+
+                    {/* Total Amount (Massive & Clean) */}
+                    <div className="text-center mb-10">
+                        <p className="text-[13px] text-slate-400 font-medium mb-3">Total Pembayaran</p>
+                        <div className="flex items-start justify-center gap-1.5">
+                            <span className="text-xl font-medium text-slate-400 mt-1">Rp</span>
+                            <span className="text-5xl md:text-6xl font-semibold text-slate-900 tracking-tight">
                                 {parseInt(transaction.total_amount).toLocaleString('id-ID')}
-                            </p>
+                            </span>
                         </div>
                     </div>
 
+                    {/* Subtle Divider */}
+                    <div className="w-full h-px bg-gradient-to-r from-transparent via-slate-200/80 to-transparent mb-8"></div>
+
+                    {/* Transaction Details (Quiet Labels, Strong Values) */}
                     <div className="space-y-4">
-                        <h3 className="text-xs text-slate-500 font-bold uppercase tracking-widest flex items-center">
-                            <span className="w-5 h-5 mr-2 bg-teal-100 text-teal-700 rounded-full flex items-center justify-center text-[10px]">🛒</span>
-                            Rincian Pembelian
-                        </h3>
-                        
-                        <div className="bg-white rounded-xl space-y-3">
-                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                                <span className="text-slate-500 text-sm font-medium">ID Tujuan</span>
-                                <span className="font-bold text-slate-800 text-sm">{transaction.target}</span>
-                            </div>
-                            <div className="flex justify-between items-center py-2 border-b border-slate-50">
-                                <span className="text-slate-500 text-sm font-medium">Kode Produk</span>
-                                <span className="font-bold text-slate-700 text-sm bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md uppercase tracking-wide">{transaction.sku_code}</span>
-                            </div>
-                            
-                            {transaction.sn && (
-                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center py-3 bg-emerald-50 px-4 rounded-xl border border-emerald-100 mt-4">
-                                    <span className="text-emerald-700 text-xs font-bold uppercase mb-1 md:mb-0">Nomor SN / Bukti:</span>
-                                    <span className="font-black text-emerald-800 text-sm font-mono break-all">{transaction.sn}</span>
-                                </div>
-                            )}
-                            
-                            {transaction.note && (
-                                <div className="mt-4 p-3 bg-rose-50 rounded-xl border border-rose-100 text-xs text-rose-600 font-medium flex gap-2 items-start">
-                                    <span className="text-lg">⚠️</span>
-                                    <p><span className="font-bold">Catatan Sistem:</span> {transaction.note}</p>
-                                </div>
-                            )}
+                        <div className="flex justify-between items-center">
+                            <span className="text-[14px] text-slate-500">ID Tujuan</span>
+                            <span className="text-[14px] font-medium text-slate-900">{transaction.target}</span>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <span className="text-[14px] text-slate-500">Kode Produk</span>
+                            <span className="text-[13px] font-medium text-slate-800 bg-slate-50 border border-slate-100 px-2 py-0.5 rounded uppercase tracking-wide">{transaction.sku_code}</span>
                         </div>
                     </div>
-                    
-                    <div className="mt-8 space-y-3">
-                        {transaction.status === 'UNPAID' && transaction.checkout_url && (
-                            <a 
-                                href={transaction.checkout_url} 
-                                className="flex items-center justify-center w-full py-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-black rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 hover:-translate-y-1 transition-all uppercase tracking-wide text-sm"
-                            >
-                                💳 Lanjutkan Pembayaran
-                            </a>
-                        )}
-                        
-                        <Link 
-                            href="/" 
-                            className="flex items-center justify-center w-full py-4 bg-slate-100 text-slate-600 font-bold rounded-xl hover:bg-slate-200 hover:text-slate-800 transition-all tracking-wide text-sm"
+
+                    {/* SN / Secure Token Section */}
+                    {transaction.sn && (
+                        <div className="mt-8 p-5 rounded-2xl bg-[#FAFAFA] border border-slate-100 flex flex-col items-center justify-center gap-2">
+                            <span className="text-[11px] font-semibold tracking-[0.1em] text-slate-400 uppercase">Nomor SN / Token Bukti</span>
+                            <span className="text-[15px] md:text-[16px] font-mono font-medium text-slate-800 text-center break-all">{transaction.sn}</span>
+                        </div>
+                    )}
+
+                    {/* System Note (Soft Warning) */}
+                    {transaction.note && (
+                        <div className="mt-6 p-4 rounded-xl bg-amber-50/50 ring-1 ring-inset ring-amber-500/20 flex gap-3 items-start">
+                            <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[12px] font-semibold text-amber-800 uppercase tracking-wider">Catatan Sistem</span>
+                                <p className="text-[13px] text-amber-700/90 leading-relaxed">{transaction.note}</p>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {/* Actions Section (Footer area of the card) */}
+                <div className="p-6 md:px-10 md:pb-8 md:pt-4 bg-white space-y-3">
+                    {transaction.status === 'UNPAID' && transaction.checkout_url && (
+                        <a 
+                            href={transaction.checkout_url} 
+                            className="flex items-center justify-center w-full py-4 bg-slate-900 text-white text-[14px] font-semibold rounded-xl hover:bg-slate-800 hover:shadow-lg hover:shadow-slate-900/10 transition-all duration-200"
                         >
-                            🏠 Kembali Ke Beranda
-                        </Link>
-                    </div>
+                            Lanjutkan Pembayaran
+                        </a>
+                    )}
+                    
+                    <Link 
+                        href="/" 
+                        className="flex items-center justify-center w-full py-4 bg-white text-slate-600 text-[14px] font-medium rounded-xl ring-1 ring-inset ring-slate-200 hover:bg-slate-50 hover:text-slate-900 transition-colors duration-200"
+                    >
+                        Kembali ke Beranda
+                    </Link>
                 </div>
             </div>
             
-            <div className="absolute bottom-4 text-center w-full text-[10px] text-slate-400 font-semibold tracking-widest uppercase">
-                Aman & Terpercaya © 2026 KayanaPay
+            {/* Minimalist Global Footer */}
+            <div className="mt-8 text-[11px] font-medium tracking-widest text-slate-400 uppercase">
+                Secured by KayanaPay © 2026
             </div>
         </div>
     );

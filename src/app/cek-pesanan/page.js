@@ -30,7 +30,7 @@ export default function CekPesanan() {
 
     try {
       const res = await fetch(
-        `http://192.168.100.17:8000/api/topup/invoice/${invoice}`
+        `https://kayanamart.my.id/api/topup/invoice/${invoice}`
       );
 
       const result = await res.json();
@@ -94,7 +94,7 @@ export default function CekPesanan() {
         {/* HERO */}
         <div className="text-center">
 
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-600 to-sky-400 flex items-center justify-center shadow-lg mb-4">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-600 to-sky-400 flex items-center justify-center shadow-lg mb-4">
             <Receipt className="text-white" size={28} />
           </div>
 
@@ -155,7 +155,7 @@ export default function CekPesanan() {
               ${
                 !invoice || isLoading
                   ? "bg-slate-200 text-slate-400"
-                  : "bg-gradient-to-r from-blue-600 to-sky-500 text-white shadow-lg shadow-blue-200"
+                  : "bg-gradient-to-r from-emerald-600 to-sky-500 text-white shadow-lg shadow-blue-200"
               }
               `}
             >
@@ -267,7 +267,7 @@ export default function CekPesanan() {
                     block
                     text-center
                     bg-gradient-to-r
-                    from-blue-600
+                    from-emerald-600
                     to-sky-500
                     text-white
                     py-3
@@ -300,7 +300,7 @@ function CardItem({
   return (
     <div className="bg-slate-50 rounded-2xl p-4 flex gap-4">
 
-      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-blue-600 shadow-sm">
+      <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-emerald-600 shadow-sm">
         {icon}
       </div>
 
@@ -313,7 +313,7 @@ function CardItem({
         <p
           className={`font-bold ${
             highlight
-              ? "text-blue-600"
+              ? "text-emerald-600"
               : "text-slate-800"
           }`}
         >

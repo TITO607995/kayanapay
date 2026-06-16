@@ -1,17 +1,26 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 
-export default function MagicChess() {
-  const [activeTab, setActiveTab] = useState("transaksi"); 
+function MagicChess() {
+  const searchParams = useSearchParams();
+  const skuFlashSale = searchParams.get("sku");
+  const [activeTab, setActiveTab] = useState("transaksi");
 
-
-  const [selectedDenom, setSelectedDenom] = useState(null); 
+  const [selectedDenom, setSelectedDenom] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
-  const [qty, setQty] = useState(1); 
-  
-  
+  const [qty, setQty] = useState(1);
+
+  // 🔴 PROMO STATES
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState(null);
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [promoError, setPromoError] = useState("");
+
   const [products, setProducts] = useState([]);
   const [paymentMethods, setPaymentMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,10 +29,40 @@ export default function MagicChess() {
   const [whatsapp, setWhatsapp] = useState("");
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [openCategory, setOpenCategory] = useState(null);
+  const [memberData, setMemberData] = useState(null); // { name, whatsapp, koin }
+  const [useKoin, setUseKoin] = useState(false);
+  const [isMemberLoading, setIsMemberLoading] = useState(true);
 
   useEffect(() => {
-    // 1. Narik Data Produk (Diamond)
-    fetch("http://192.168.100.17:8000/api/topup/products?brand=MAGIC CHESS")
+    const token = localStorage.getItem("kayana_token");
+    if (!token) {
+      setIsMemberLoading(false);
+      return;
+    }
+
+    fetch("https://kayanamart.my.id/api/member/dashboard", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.status === "success" && d.data?.profil) {
+          setMemberData(d.data.profil);
+
+          // auto-fill whatsapp dari profil
+          if (d.data.profil.whatsapp) {
+            setWhatsapp(d.data.profil.whatsapp);
+          }
+        }
+      })
+      .catch((e) => console.error("Gagal ambil data member:", e))
+      .finally(() => setIsMemberLoading(false));
+  }, []);
+
+  useEffect(() => {
+    fetch("https://kayanamart.my.id/api/topup/products?brand=MAGIC CHESS")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -32,8 +71,7 @@ export default function MagicChess() {
       })
       .catch((error) => console.error("Gagal narik produk:", error));
 
-    // 2. Narik Data Metode Pembayaran Duitku
-    fetch("http://192.168.100.17:8000/api/payment/methods")
+    fetch("https://kayanamart.my.id/api/payment/methods")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "success") {
@@ -47,7 +85,21 @@ export default function MagicChess() {
       });
   }, []);
 
-  // Format Rupiah
+  useEffect(() => {
+    if (products.length > 0 && skuFlashSale) {
+      const targetProduct = products.find(p => p.buyer_sku_code === skuFlashSale);
+
+      if (targetProduct) {
+        setSelectedDenom(targetProduct);
+        console.log("Berhasil auto-select produk flash sale:", targetProduct.product_name);
+
+        setTimeout(() => {
+          document.getElementById('step-nominal')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+      }
+    }
+  }, [products, skuFlashSale]);
+
   const formatRupiah = (angka) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
@@ -56,13 +108,62 @@ export default function MagicChess() {
     }).format(angka);
   };
 
-  // Kalkulasi Total
+  // 🔥 FUNGSI APPLY PROMO
+  const handleApplyPromo = async (e) => {
+    e.preventDefault();
+
+    if (!promoCode.trim()) {
+      setPromoError("Masukkan kode promo dong!");
+      return;
+    }
+
+    setPromoLoading(true);
+    setPromoError("");
+
+    try {
+      const res = await fetch(
+        `https://kayanamart.my.id/api/promo/check?code=${promoCode.toUpperCase()}`
+      );
+      const data = await res.json();
+
+      if (data.status === "success") {
+        setAppliedPromo(promoCode.toUpperCase());
+        setDiscountAmount(data.data.discount);
+        setPromoError("");
+        alert("✅ Promo berhasil dipakai!");
+      } else {
+        setAppliedPromo(null);
+        setDiscountAmount(0);
+        setPromoError("❌ " + data.message);
+      }
+    } catch (error) {
+      setPromoError("❌ Gagal cek promo, coba lagi ya.");
+      console.error(error);
+    }
+    setPromoLoading(false);
+  };
+
+  // 🔥 FUNGSI HAPUS PROMO
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setDiscountAmount(0);
+    setPromoCode("");
+    setPromoError("");
+  };
+
   const price = selectedDenom ? selectedDenom.price_sell : 0;
   const subtotal = price * qty;
   const adminFee = selectedPayment ? parseInt(selectedPayment.totalFee) : 0;
-  const grandTotal = subtotal + adminFee;
-  
-  
+  const baseTotal = subtotal + adminFee - discountAmount;
+
+  // 1 koin = Rp 1
+  const koinSaldo = memberData?.koin ?? 0;
+  const koinNilaiRupiah = koinSaldo;
+  const koinDiskon = useKoin ? Math.min(koinSaldo, Math.max(0, baseTotal)) : 0;
+  const koinDigunakan = koinDiskon;
+
+  const finalTotal = Math.max(0, baseTotal - koinDiskon);
+
   const groupedPayments = paymentMethods.reduce((acc, pay) => {
     let category = "Lainnya";
     const name = pay.paymentName.toUpperCase();
@@ -96,26 +197,38 @@ export default function MagicChess() {
     setIsCheckoutLoading(true);
 
     try {
-      const response = await fetch("http://192.168.100.17:8000/api/payment/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "Accept": "application/json" },
-        body: JSON.stringify({
-          target: `${userId}${zoneId}`, 
-          product_name: selectedDenom.product_name,
-          sku_code: selectedDenom.buyer_sku_code,
-          price: price * qty,
-          admin_fee: adminFee,
-          total_amount: grandTotal,
-          payment_method: selectedPayment.paymentMethod,
-          payment_name: selectedPayment.paymentName,
-          whatsapp: whatsapp,
-        })
+      const token = localStorage.getItem("kayana_token");
+
+      const response = await fetch(
+        "https://kayanamart.my.id/api/payment/checkout",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            target: `${userId}`,
+            product_name: selectedDenom.product_name,
+            sku_code: selectedDenom.buyer_sku_code,
+            price: price * qty,
+            admin_fee: adminFee,
+            total_amount: finalTotal,
+            payment_method: selectedPayment.paymentMethod,
+            payment_name: selectedPayment.paymentName,
+            whatsapp: whatsapp,
+            promo_code: appliedPromo || null,
+            discount_amount: discountAmount,
+            use_koin: useKoin && koinDigunakan > 0,
+            koin_used: koinDigunakan,
+          }),
       });
 
       const resData = await response.json();
 
       if (resData.status === "success") {
-        window.location.href = resData.data.paymentUrl; 
+        window.location.href = resData.data.paymentUrl;
       } else {
         alert("Gagal memproses pembayaran: " + resData.message);
       }
@@ -123,17 +236,25 @@ export default function MagicChess() {
       alert("Terjadi kesalahan jaringan.");
       console.error(error);
     }
-    
+
     setIsCheckoutLoading(false);
   };
 
   return (
     <main className="min-h-screen bg-slate-50 text-slate-800 font-sans pb-36 lg:pb-20 relative">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
-        
+
         {/* Banner Game */}
         <div className="flex items-center gap-4 mb-8 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <div className="w-16 h-16 bg-blue-50 text-blue-600 border border-blue-100 rounded-xl flex items-center justify-center text-3xl">⚔️</div>
+          <div className="relative w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100 overflow-hidden flex-shrink-0">
+            <Image
+              src="/images/mcgg.jpg"
+              alt="Magic Chess Go Go"
+              fill
+              className="object-cover"
+              sizes="56px"
+            />
+          </div>
           <div>
             <h2 className="text-2xl font-black text-slate-800 uppercase">Magic Chess Go Go</h2>
             <p className="text-sm text-slate-500">Moonton | Proses Otomatis 1 Detik.</p>
@@ -141,61 +262,59 @@ export default function MagicChess() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          
 
           <div className="lg:col-span-2 space-y-6">
 
             <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex gap-2 lg:hidden">
-              <button 
+              <button
                 onClick={() => setActiveTab("transaksi")}
                 className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${
-                  activeTab === "transaksi" 
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                  : "bg-slate-50 text-slate-500 hover:bg-slate-100"
+                  activeTab === "transaksi"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                    : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                 }`}
               >
                 Transaksi
               </button>
-              <button 
+              <button
                 onClick={() => setActiveTab("keterangan")}
                 className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${
-                  activeTab === "keterangan" 
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30" 
-                  : "bg-slate-50 text-slate-500 hover:bg-slate-100"
+                  activeTab === "keterangan"
+                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                    : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                 }`}
               >
                 Keterangan
               </button>
             </div>
 
-            {/* KONTEN TRANSAKSI (Di Desktop selalu muncul, Di HP ikuti state Tab) */}
             <div className={`space-y-6 ${activeTab === "transaksi" ? "block animate-fade-in" : "hidden lg:block"}`}>
-              
+
               {/* STEP 1: Akun */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span>
                   Masukkan Data Akun
                 </h3>
-                
+
                 <div className="flex flex-col gap-1">
                   <div className="flex gap-4">
                     <div className="w-1/2 md:w-2/3">
-                      <input 
-                        type="number" 
-                        placeholder="Masukkan User ID" 
+                      <input
+                        type="number"
+                        placeholder="Masukkan User ID"
                         value={userId || ""}
                         onChange={(e) => setUserId(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                       />
                     </div>
                     <div className="w-1/2 md:w-1/3">
-                      <input 
-                        type="number" 
-                        placeholder="(Zone ID)" 
+                      <input
+                        type="number"
+                        placeholder="(Zone ID)"
                         value={zoneId || ""}
                         onChange={(e) => setZoneId(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                       />
                     </div>
                   </div>
@@ -205,18 +324,17 @@ export default function MagicChess() {
                 </div>
               </div>
 
-             
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+              <div id="step-nominal" className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">2</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">2</span>
                   Pilih Nominal Top Up
                 </h3>
-                
+
                 {isLoading ? (
                   <div className="text-center py-10"><p className="text-slate-500 animate-pulse font-semibold">Mengambil daftar harga...</p></div>
                 ) : (
                   <div className="space-y-6">
-                    
+
                     {/* KATEGORI 1: WEEKLY PASS */}
                     {products.filter(p => p.product_name.toLowerCase().includes('weekly') || p.product_name.toLowerCase().includes('pass')).length > 0 && (
                       <div>
@@ -228,17 +346,17 @@ export default function MagicChess() {
                             .filter(item => item.product_name.toLowerCase().includes('weekly') || item.product_name.toLowerCase().includes('pass'))
                             .sort((a, b) => a.price_sell - b.price_sell)
                             .map((item) => (
-                              <button 
+                              <button
                                 key={item.buyer_sku_code}
                                 onClick={() => setSelectedDenom(item)}
                                 className={`p-4 rounded-xl border text-left transition-all ${
-                                  selectedDenom?.buyer_sku_code === item.buyer_sku_code 
-                                  ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md" 
-                                  : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
+                                  selectedDenom?.buyer_sku_code === item.buyer_sku_code
+                                    ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500 shadow-md"
+                                    : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
                                 }`}
                               >
-                                <p className="font-bold text-sm text-slate-800 line-clamp-2">{item.product_name.replace("MOBILELEGEND - ", "")}</p>
-                                <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                                <p className="font-bold text-sm text-slate-800 line-clamp-2">{item.product_name.replace("MAGIC CHESS - ", "")}</p>
+                                <p className="text-xs font-black text-emerald-600 mt-1">{formatRupiah(item.price_sell)}</p>
                               </button>
                             ))}
                         </div>
@@ -255,17 +373,17 @@ export default function MagicChess() {
                           .filter(item => !item.product_name.toLowerCase().includes('weekly') && !item.product_name.toLowerCase().includes('pass') && !item.product_name.toLowerCase().includes('cek'))
                           .sort((a, b) => a.price_sell - b.price_sell)
                           .map((item) => (
-                            <button 
+                            <button
                               key={item.buyer_sku_code}
                               onClick={() => setSelectedDenom(item)}
                               className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
-                                selectedDenom?.buyer_sku_code === item.buyer_sku_code 
-                                ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md" 
-                                : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
+                                selectedDenom?.buyer_sku_code === item.buyer_sku_code
+                                  ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500 shadow-md"
+                                  : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
                               }`}
                             >
-                              <p className="font-bold text-sm text-slate-800">{item.product_name.replace("MOBILELEGEND - ", "")}</p>
-                              <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                              <p className="font-bold text-sm text-slate-800">{item.product_name.replace("MAGIC CHESS - ", "")}</p>
+                              <p className="text-xs font-black text-emerald-600 mt-1">{formatRupiah(item.price_sell)}</p>
                             </button>
                           ))}
                       </div>
@@ -277,21 +395,21 @@ export default function MagicChess() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
                   Jumlah Pembelian
                 </h3>
                 <div className="flex items-center gap-4">
-                  <button 
+                  <button
                     onClick={() => setQty(qty > 1 ? qty - 1 : 1)}
                     className="w-12 h-12 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xl font-bold transition border border-slate-200"
                   >-</button>
-                  <input 
-                    type="number" 
-                    value={qty} 
+                  <input
+                    type="number"
+                    value={qty}
                     onChange={(e) => setQty(e.target.value > 0 ? parseInt(e.target.value) : 1)}
-                    className="w-20 text-center bg-white border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold shadow-inner" 
+                    className="w-20 text-center bg-white border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold shadow-inner"
                   />
-                  <button 
+                  <button
                     onClick={() => setQty(qty + 1)}
                     className="w-12 h-12 flex items-center justify-center bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xl font-bold transition border border-slate-200"
                   >+</button>
@@ -300,15 +418,14 @@ export default function MagicChess() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
                   Pilih Pembayaran
                 </h3>
-                
+
                 {paymentMethods.length === 0 && !isLoading ? (
                   <p className="text-sm text-red-500 font-medium">Metode pembayaran sedang tidak tersedia.</p>
                 ) : (
                   <div className="space-y-6">
-                    
 
                     {groupedPayments["QRIS"] && groupedPayments["QRIS"].length > 0 && (
                       <div>
@@ -318,27 +435,27 @@ export default function MagicChess() {
                             const displayImage = "https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg";
 
                             return (
-                              <button 
+                              <button
                                 key={pay.paymentMethod}
                                 onClick={() => setSelectedPayment(pay)}
                                 className={`w-full p-4 rounded-xl border flex flex-col justify-center transition-all ${
-                                  selectedPayment?.paymentMethod === pay.paymentMethod 
-                                  ? "border-blue-500 bg-blue-50 ring-2 ring-blue-500 shadow-md" 
-                                  : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                                  selectedPayment?.paymentMethod === pay.paymentMethod
+                                    ? "border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                                    : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
                                 }`}
                               >
                                 <div className="flex justify-between items-center w-full mb-3">
                                   <div className="h-8 flex items-center justify-start">
                                     <img src={displayImage} alt={displayName} className="h-full object-contain" />
                                   </div>
-                                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-blue-600' : 'border-slate-300'}`}>
-                                    {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2.5 h-2.5 bg-blue-600 rounded-full"></div>}
+                                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-emerald-600' : 'border-slate-300'}`}>
+                                    {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full"></div>}
                                   </div>
                                 </div>
-                                
+
                                 <div className="flex justify-between items-end w-full">
                                   <p className="font-bold text-sm text-slate-800 text-left">{displayName}</p>
-                                  <p className="text-xs font-black text-blue-600 bg-blue-100 px-2 py-1 rounded-md">
+                                  <p className="text-xs font-black text-emerald-600 bg-blue-100 px-2 py-1 rounded-md">
                                     {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
                                   </p>
                                 </div>
@@ -353,23 +470,23 @@ export default function MagicChess() {
                     <div className="space-y-3">
                       {categoryOrder.filter(cat => cat !== "QRIS").map((category) => {
                         const methods = groupedPayments[category];
-                        if (!methods || methods.length === 0) return null; 
+                        if (!methods || methods.length === 0) return null;
 
                         const isOpen = openCategory === category;
-                        
+
                         return (
                           <div key={category} className={`border rounded-xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-blue-300 shadow-sm' : 'border-slate-200'}`}>
-                            <button 
+                            <button
                               onClick={() => setOpenCategory(isOpen ? null : category)}
-                              className={`w-full flex items-center justify-between p-4 transition-colors ${isOpen ? 'bg-blue-50' : 'bg-white hover:bg-slate-50'}`}
+                              className={`w-full flex items-center justify-between p-4 transition-colors ${isOpen ? 'bg-emerald-50' : 'bg-white hover:bg-slate-50'}`}
                             >
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">{categoryIcons[category]}</span>
-                                <span className={`font-bold ${isOpen ? 'text-blue-600' : 'text-slate-700'}`}>
+                                <span className={`font-bold ${isOpen ? 'text-emerald-600' : 'text-slate-700'}`}>
                                   {category}
                                 </span>
                               </div>
-                              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-blue-500' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-emerald-500' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                               </svg>
                             </button>
@@ -377,27 +494,27 @@ export default function MagicChess() {
                             {isOpen && (
                               <div className="p-4 bg-slate-50 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-blue-100">
                                 {methods.map((pay) => (
-                                  <button 
+                                  <button
                                     key={pay.paymentMethod}
                                     onClick={() => setSelectedPayment(pay)}
                                     className={`w-full p-3 rounded-xl border flex flex-col justify-center transition-all ${
-                                      selectedPayment?.paymentMethod === pay.paymentMethod 
-                                      ? "border-blue-500 bg-white ring-1 ring-blue-500 shadow-md" 
-                                      : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
+                                      selectedPayment?.paymentMethod === pay.paymentMethod
+                                        ? "border-emerald-500 bg-white ring-1 ring-emerald-500 shadow-md"
+                                        : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
                                     }`}
                                   >
                                     <div className="flex justify-between items-center w-full mb-2">
                                       <div className="h-6 flex items-center justify-start">
                                         <img src={pay.paymentImage} alt={pay.paymentName} className="h-full object-contain" />
                                       </div>
-                                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-blue-500' : 'border-slate-300'}`}>
-                                        {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
+                                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-emerald-500' : 'border-slate-300'}`}>
+                                        {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>}
                                       </div>
                                     </div>
-                                    
+
                                     <div className="flex justify-between items-end w-full mt-1">
                                       <p className="font-bold text-xs text-slate-700 text-left line-clamp-1">{pay.paymentName}</p>
-                                      <p className="text-[11px] font-black text-blue-500 whitespace-nowrap">
+                                      <p className="text-[11px] font-black text-emerald-500 whitespace-nowrap">
                                         {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
                                       </p>
                                     </div>
@@ -413,43 +530,152 @@ export default function MagicChess() {
                   </div>
                 )}
               </div>
+
+              {/* 🔴 STEP 5: PROMO - UPDATED */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">5</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">5</span>
                   Kode Promo <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                 </h3>
-                <div className="flex gap-2">
-                  <input type="text" placeholder="Masukkan kode promo" className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition uppercase" />
-                  <button className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 rounded-xl transition shadow-md">Gunakan</button>
-                </div>
+
+                {appliedPromo ? (
+                  <div className="rounded-xl p-3.5 mb-3" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                    <div className="flex items-center justify-between gap-3">
+                      <div>
+                        <p className="text-sm font-bold text-emerald-700">✓ {appliedPromo}</p>
+                        <p className="text-xs mt-1 text-emerald-600">
+                          Diskon: {formatRupiah(discountAmount)}
+                        </p>
+                      </div>
+                      <button
+                        onClick={handleRemovePromo}
+                        className="px-3 py-1.5 rounded-lg text-xs font-medium transition"
+                        style={{ background: "#F3E8FF", color: "#7C3AED", border: "0.5px solid #D8B4FE" }}
+                      >
+                        Hapus
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <form onSubmit={handleApplyPromo} className="flex gap-2 mb-3">
+                    <input
+                      type="text"
+                      placeholder="Masukkan kode promo"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition uppercase"
+                    />
+                    <button
+                      type="submit"
+                      disabled={promoLoading || !promoCode.trim()}
+                      className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 rounded-xl transition shadow-md disabled:opacity-50"
+                    >
+                      {promoLoading ? "Cek..." : "Pakai"}
+                    </button>
+                  </form>
+                )}
+
+                {promoError && (
+                  <p className="text-xs font-medium text-red-600">
+                    {promoError}
+                  </p>
+                )}
               </div>
+
+              {!isMemberLoading && memberData && (
+              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">6</span>
+                  Koin KayanaPay <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
+                </h3>
+
+                <div
+                  className="rounded-xl p-4 flex items-center justify-between gap-4 cursor-pointer transition-all"
+                  onClick={() => setUseKoin((v) => !v)}
+                  style={{
+                    background: useKoin ? "#F5F3FF" : "var(--cream-2)",
+                    border: `0.5px solid ${useKoin ? "#A78BFA" : "var(--border)"}`,
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
+                      style={{
+                        background: useKoin ? "#EDE9FE" : "var(--cream-3)",
+                        border: `0.5px solid ${useKoin ? "#C4B5FD" : "var(--border)"}`,
+                      }}
+                    >
+                      🪙
+                    </div>
+
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: useKoin ? "#7C3AED" : "var(--text-primary)" }}>
+                        {koinSaldo.toLocaleString("id-ID")} Koin
+                      </p>
+                      <p className="text-xs mt-0.5" style={{ color: useKoin ? "#6D28D9" : "var(--text-tertiary)" }}>
+                        Setara {formatRupiah(koinNilaiRupiah)}
+                        {useKoin && koinDigunakan > 0 && (
+                          <span className="ml-1 font-semibold" style={{ color: "#7C3AED" }}>
+                            → hemat {formatRupiah(koinDiskon)}
+                          </span>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div
+                    className="relative flex-shrink-0 w-12 h-6 rounded-full transition-all"
+                    style={{
+                      background: useKoin ? "#7C3AED" : "var(--cream-3)",
+                      border: `0.5px solid ${useKoin ? "#7C3AED" : "var(--border)"}`,
+                    }}
+                  >
+                    <div
+                      className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-all"
+                      style={{ left: useKoin ? "calc(100% - 1.375rem)" : "0.125rem" }}
+                    />
+                  </div>
+                </div>
+
+                {useKoin && koinDigunakan === 0 && selectedDenom && (
+                  <p className="text-xs mt-2 pl-1" style={{ color: "var(--text-tertiary)" }}>
+                    ℹ️ Saldo koin sudah terpakai maksimal oleh diskon lain.
+                  </p>
+                )}
+
+                {!selectedDenom && useKoin && (
+                  <p className="text-xs mt-2 pl-1" style={{ color: "var(--text-tertiary)" }}>
+                    ℹ️ Pilih nominal dulu untuk melihat potongan koin.
+                  </p>
+                )}
+              </div>
+            )}
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">6</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">6</span>
                   Detail Kontak
                 </h3>
-                <input 
-                  type="number" 
-                  placeholder="Nomor WhatsApp (08...)" 
+                <input
+                  type="number"
+                  placeholder="Nomor WhatsApp (08...)"
                   value={whatsapp || ""}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                 />
                 <p className="text-xs text-slate-400 mt-2">Bukti pembelian akan dikirimkan melalui WhatsApp.</p>
               </div>
             </div>
 
-            {/* KONTEN KETERANGAN (Hanya muncul di Mobile saat tab Keterangan aktif, di Desktop disembunyikan pakai lg:hidden karena udah dipindah ke Kanan) */}
             <div className={`${activeTab === "keterangan" ? "block animate-fade-in" : "hidden"} lg:hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200`}>
-              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">
+              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">
                 Deskripsi Magic Chess Go Go
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed mb-6">
                 Top up diamond Magic Chess Go Go (MCGG) harga paling murah, aman, cepat, dan terpercaya hanya di KAYANAPAY. Beli diamond ML untuk gacha skin epic, legend, hingga collector impianmu!
               </p>
-              
-              <h4 className="text-slate-800 font-bold text-sm mb-3">Cara Top Up MLBB :</h4>
+
+              <h4 className="text-slate-800 font-bold text-sm mb-3">Cara Top Up MCGG :</h4>
               <ol className="list-decimal ml-4 space-y-2 text-slate-600 text-sm font-medium">
                 <li>Pilih tab <b>Transaksi</b>.</li>
                 <li>Masukkan Data Akun (User ID & Zone ID).</li>
@@ -467,17 +693,17 @@ export default function MagicChess() {
 
           <div className="hidden lg:block lg:col-span-1 relative">
             <div className="space-y-6 h-full">
-              
-              {/* KOTAK DESKRIPSI (Nangkring di Atas Rincian Pesanan) */}
+
+              {/* KOTAK DESKRIPSI */}
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">
+                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">
                   Deskripsi Magic Chess Go Go
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
                   Top up diamond Magic Chess Go Go (MCGG) harga paling murah, aman, cepat, dan terpercaya hanya di KAYANAPAY. Beli diamond ML untuk gacha skin epic, legend, hingga collector impianmu!
                 </p>
-                
-                <h4 className="text-slate-800 font-bold text-sm mb-3">Cara Top Up MLBB :</h4>
+
+                <h4 className="text-slate-800 font-bold text-sm mb-3">Cara Top Up MCGG :</h4>
                 <ol className="list-decimal ml-4 space-y-2 text-slate-600 text-sm font-medium">
                   <li>Masukkan Data Akun (User ID & Zone ID).</li>
                   <li>Pilih Nominal Diamond yang diinginkan.</li>
@@ -490,12 +716,20 @@ export default function MagicChess() {
                 </ol>
               </div>
 
-              {/* KOTAK RINCIAN PESANAN (TETAP STICKY WAKTU DI-SCROLL KE BAWAH) */}
+              {/* KOTAK RINCIAN PESANAN */}
               <div className="sticky top-24 bg-white rounded-2xl p-6 border border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <h3 className="font-black text-lg text-slate-800 border-b border-slate-100 pb-4 mb-4">Rincian Pesanan</h3>
-                
+
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-2xl border border-blue-100">⚔️</div>
+                  <div className="relative w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100 overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/images/mcgg.jpg"
+                      alt="Magic Chess Go Go"
+                      fill
+                      className="object-cover"
+                      sizes="56px"
+                    />
+                  </div>
                   <div>
                     <h4 className="text-slate-800 font-bold text-sm">Magic Chess Go Go</h4>
                     <p className="text-slate-500 text-xs mt-0.5">
@@ -503,7 +737,7 @@ export default function MagicChess() {
                     </p>
                   </div>
                 </div>
-                
+
                 <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
                   <div className="flex justify-between text-sm">
                     <span className="text-slate-500 font-medium">Harga</span>
@@ -517,22 +751,35 @@ export default function MagicChess() {
                     <span className="text-slate-500 font-medium">Biaya Admin</span>
                     <span className="text-slate-800 font-bold">{selectedPayment ? formatRupiah(adminFee) : "-"}</span>
                   </div>
+                  {/* 🔴 TAMBAH INI - Discount */}
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500 font-medium">Diskon Promo</span>
+                      <span className="text-emerald-600 font-bold">-{formatRupiah(discountAmount)}</span>
+                    </div>
+                  )}
+                  {useKoin && koinDigunakan > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-500 font-medium">Koin ({koinDigunakan} koin)</span>
+                      <span className="text-purple-600 font-bold">-{formatRupiah(koinDiskon)}</span>
+                    </div>
+                  )}
                 </div>
-                
+
                 <div className="flex justify-between items-center mb-6 pt-2">
                   <span className="text-slate-800 font-bold">Total Bayar</span>
-                  <span className="text-blue-600 font-black text-xl">
-                    {selectedDenom ? formatRupiah(grandTotal) : "-"}
+                  <span className="text-emerald-600 font-black text-xl">
+                    {selectedDenom ? formatRupiah(finalTotal) : "-"}
                   </span>
                 </div>
-                
+
                 {/* Tombol Beli (Desktop) */}
-                <button 
+                <button
                   onClick={handleCheckout}
                   className={`w-full font-black py-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${
                     selectedDenom && selectedPayment && userId && zoneId && whatsapp && !isCheckoutLoading
-                    ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30 cursor-pointer" 
-                    : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                      ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/30 cursor-pointer"
+                      : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                   }`}
                   disabled={!selectedDenom || !selectedPayment || !userId || !zoneId || !whatsapp || isCheckoutLoading}
                 >
@@ -562,17 +809,17 @@ export default function MagicChess() {
         ) : (
           <div className="flex justify-between items-center px-2">
             <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Pembayaran</span>
-            <span className="text-xl font-black text-blue-600">{formatRupiah(grandTotal)}</span>
+            <span className="text-xl font-black text-emerald-600">{formatRupiah(finalTotal)}</span>
           </div>
         )}
-        
+
         <button
           onClick={handleCheckout}
           disabled={!selectedDenom || !selectedPayment || !userId || !zoneId || !whatsapp || isCheckoutLoading}
           className={`w-full font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide text-sm ${
             selectedDenom && selectedPayment && userId && zoneId && whatsapp && !isCheckoutLoading
-            ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30"
-            : "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
+              ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30"
+              : "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
           }`}
         >
           {isCheckoutLoading ? "Memproses..." : "Pesan Sekarang!"}
@@ -580,5 +827,17 @@ export default function MagicChess() {
       </div>
 
     </main>
+  );
+}
+
+export default function MagicChessContent() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <p className="text-sm animate-pulse text-emerald-600">Menyiapkan halaman...</p>
+      </div>
+    }>
+      <MagicChess />
+    </Suspense>
   );
 }
