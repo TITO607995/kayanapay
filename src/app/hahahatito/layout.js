@@ -123,6 +123,7 @@ export default function AdminLayout({ children }) {
     { href: "/hahahatito",              icon: "📊", label: "Dashboard",          exact: true  },
     { href: "/hahahatito/transaksi",    icon: "🧾", label: "Transaksi",          exact: false },
     { href: "/hahahatito/harga",        icon: "💰", label: "Kelola Harga",       exact: false },
+    { href: "/hahahatito/member",       icon: "👥", label: "Kelola Member",      exact: false },
     { href: "/hahahatito/promo",        icon: "🎟️", label: "Kode Promo",         exact: false },
     { href: "/hahahatito/banner",       icon: "🖼️", label: "Banner Web",         exact: false },
     { href: "/hahahatito/pengaturan",   icon: "⚙️", label: "Pengaturan",         exact: false },

@@ -66,7 +66,6 @@ export default function Home() {
   const [activeFilter, setActiveFilter]     = useState("all");
   const prodRef = useRef(null);
 
-  // 🔥 1. Pisahkan fungsi narik data banner
   const fetchBanners = useCallback(() => {
     fetch("https://kayanamart.my.id/api/banners")
       .then(r => r.json())
@@ -74,14 +73,12 @@ export default function Home() {
       .catch(console.error);
   }, []);
 
-  // 🔥 2. Pasang Antena Reverb untuk mantau perubahan banner dari Admin
   useEffect(() => {
     fetchBanners();
 
     if (typeof window !== 'undefined' && window.Echo) {
       window.Echo.channel('kayana-public-channel')
         .listen('.banner.updated', () => {
-          // Banner di admin berubah, web pelanggan otomatis fetch ulang diam-diam
           fetchBanners();
         });
     }
@@ -148,11 +145,13 @@ export default function Home() {
     { name:"XL",         publisher:"XL Axiata",        link:"/xl",        isHot:false, image:"/images/XL.jpg" },
     { name:"by.U",       publisher:"Telkomsel",        link:"/byu",       isHot:false, image:"/images/by.u.png" },
   ];
+
   const menuTagihan = [
-    { name:"BPJS Kesehatan",       publisher:"BPJS Kesehatan", link:"/bpjs-kesehatan", isHot:true,  image:"/images/bpjs.jpg" },
-    { name:"PDAM Daerah",          publisher:"Daerah",         link:"/pdam",           isHot:false, image:"/images/pdam.png" },
-    { name:"Pajak PBB",            publisher:"Pajak Negara",   link:"/pbb",            isHot:false, image:"/images/pbb.jpeg" },
-    { name:"BPJS Ketenagakerjaan", publisher:"BPJS TK",        link:"/bpjs-tk",        isHot:false, image:"/images/bpjstk.jpg" },
+    { name:"BPJS Kesehatan",       publisher:"BPJS Kesehatan",     link:"/bpjs-kesehatan", isHot:true,  image:"/images/bpjs.jpg" },
+    { name:"Internet & WiFi",      publisher:"IndiHome, Biznet",   link:"/tagihan-wifi",   isHot:true,  image:"/images/wifi.png" },
+    { name:"PDAM Daerah",          publisher:"Daerah",             link:"/pdam",           isHot:false, image:"/images/pdam.png" },
+    { name:"Pajak PBB",            publisher:"Pajak Negara",       link:"/pbb",            isHot:false, image:"/images/pbb.jpeg" },
+    { name:"BPJS Ketenagakerjaan", publisher:"BPJS TK",            link:"/bpjs-tk",        isHot:false, image:"/images/bpjstk.jpg" },
   ];
 
   const sections = [
@@ -180,8 +179,6 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-800">
-
-      {/* ── PREMIUM HERO BANNER ─── */}
       {banners.length > 0 && (
         <section className="bg-white border-b border-slate-100 py-6 md:py-8">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
@@ -208,8 +205,6 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      {/* ── STRIPE/APPLE STYLE STATIC HERO HERO (FALLBACK) ─── */}
       {banners.length === 0 && (
         <section className="bg-white border-b border-slate-100 overflow-hidden py-14 md:py-24">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
@@ -269,13 +264,9 @@ export default function Home() {
           </div>
         </section>
       )}
-
-      {/* ── FLASH SALE SECTION ─── */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 my-4">
         <FlashSale />
       </div>
-
-      {/* ── CAPSULE FILTER CHIPS (Apple Minimalist Navigation) ─── */}
       <div id="produk" ref={prodRef} className="sticky top-0 z-40 bg-[#FAFAFA]/95 backdrop-blur-md border-b border-slate-100 py-4 shadow-[0_2px_15px_rgba(0,0,0,0.01)]">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar py-1" style={{ scrollbarWidth: "none" }}>
@@ -295,8 +286,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* ── PRODUCT SHOWCASE SECTIONS ─── */}
       <div className="space-y-4 max-w-6xl mx-auto px-4 md:px-6 pt-6">
         {sections.map(sec => {
           if (activeFilter !== "all" && activeFilter !== sec.id) return null;
@@ -319,8 +308,6 @@ export default function Home() {
           );
         })}
       </div>
-
-      {/* ── WHY CHOOSE US (Stripe Feature Layout Grid) ─── */}
       <section className="bg-white border-y border-slate-100 py-16 md:py-24 my-16 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
           

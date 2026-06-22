@@ -106,9 +106,6 @@ export default function MemberDashboard() {
             
             <div className="text-center md:text-left flex-1 space-y-1.5">
               <h2 className="text-xl font-semibold text-slate-900">{profil.nama}</h2>
-              <p className="text-[14px] text-slate-500">
-                <span className="font-medium text-slate-700">@{profil.username}</span> • {profil.whatsapp}
-              </p>
               <div className="pt-2">
                 <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-slate-50 text-slate-500 text-[12px] font-medium ring-1 ring-inset ring-slate-200/50">
                   Member sejak {profil.bergabung_sejak}
