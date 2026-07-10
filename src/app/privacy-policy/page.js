@@ -13,7 +13,7 @@ export default function PrivacyPolicy() {
                 
                 <div className="space-y-6 text-sm text-gray-600 leading-relaxed">
                     <p>
-                        Kami di <strong>KayanaPay</strong> (PT Kayana Jaya Makmur) sangat menghargai privasi data Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat menggunakan layanan di <span className="text-teal-600 font-bold">kayanapay.my.id</span>.
+                        Kami di <strong>KayanaPay</strong> (PT Kayana Jaya Makmur) sangat menghargai privasi data Anda. Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda saat menggunakan layanan di <span className="text-teal-600 font-bold">kayanapay.com</span>.
                     </p>
 
                     <div>

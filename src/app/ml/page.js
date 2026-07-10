@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 // ── Komponen kecil reusable ──────────────────────────────────────────────────
 const StepLabel = ({ n, title, optional }) => (
@@ -38,6 +38,7 @@ const InputField = ({ ...props }) => (
 // ── Halaman Utama (Konten) ───────────────────────────────────────────────────
 function MobileLegendsContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const skuFlashSale = searchParams.get("sku");
   const [activeTab, setActiveTab] = useState("transaksi");
   const [selectedDenom, setSelectedDenom] = useState(null);
@@ -63,6 +64,7 @@ function MobileLegendsContent() {
   const [memberData, setMemberData] = useState(null); // { name, whatsapp, koin }
   const [useKoin, setUseKoin] = useState(false);
   const [isMemberLoading, setIsMemberLoading] = useState(true);
+  const [qrModal, setQrModal] = useState({ show: false, qrUrl: "", ref: "", amount: 0 });
 
   // ── Ambil data member dari API jika sudah login ──────────────────────────
   useEffect(() => {
@@ -91,15 +93,26 @@ function MobileLegendsContent() {
   }, []);
 
   useEffect(() => {
+    // Fetch produk tetap jalan
     fetch("https://kayanamart.my.id/api/topup/products?brand=MOBILE LEGENDS")
       .then(r => r.json())
-      .then(d => { if (d.status === "success") setProducts(d.data); })
-      .catch(e => console.error(e));
+      .then(d => { 
+        if (d.status === "success") {
+           setProducts(d.data); 
+        }
+      })
+      .catch(e => console.error(e))
+      .finally(() => {
+        // 🔥 INI KUNCINYA: Matikan status loading muter-muter setelah API selesai ditarik
+        setIsLoading(false); 
+      });
 
-    fetch("https://kayanamart.my.id/api/payment/methods")
-      .then(r => r.json())
-      .then(d => { if (d.status === "success") setPaymentMethods(d.data); setIsLoading(false); })
-      .catch(e => { console.error(e); setIsLoading(false); });
+    // Langsung set default payment ke QRIS tanpa nembak API
+    setSelectedPayment({
+      paymentMethod: "QRIS",
+      paymentName: "QRIS All Payment",
+      totalFee: 0 
+    });
   }, []);
 
   // Auto-cek nickname
@@ -204,12 +217,15 @@ function MobileLegendsContent() {
   const categoryIcons = { "QRIS": "🔳", "E-Wallet": "👛", "Virtual Account": "🏦", "Minimarket": "🏪", "Lainnya": "💳" };
 
   // ── Checkout ──────────────────────────────────────────────────────────────
+  // ── Checkout (Murni Push Halaman ke Invoice) ──────────────────────────────
   const handleCheckout = async () => {
     if (!userId || !zoneId || !whatsapp) {
       alert("Harap lengkapi User ID, Zone ID, dan Nomor WhatsApp!");
       return;
     }
+    
     setIsCheckoutLoading(true);
+    
     try {
       const token = localStorage.getItem("kayana_token");
       const res = await fetch("https://kayanamart.my.id/api/payment/checkout", {
@@ -217,7 +233,6 @@ function MobileLegendsContent() {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
-          // Sertakan token kalau ada (biar backend bisa track member)
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({
@@ -232,17 +247,23 @@ function MobileLegendsContent() {
           whatsapp,
           promo_code: appliedPromo || null,
           discount_amount: discountAmount,
-          // 🔥 FIELD BARU: info koin
           use_koin: useKoin && koinDigunakan > 0,
           koin_used: koinDigunakan,
         }),
       });
+      
       const d = await res.json();
-      if (d.status === "success") window.location.href = d.data.paymentUrl;
-      else alert("Gagal memproses: " + d.message);
+      
+      if (d.status === "success") {
+        // 🔥 LANGSUNG PUSH KE HALAMAN INVOICE KETIKA KLIK BAYAR
+        router.push(`/invoice/${d.data.reference}`);
+      } else {
+        alert("Gagal memproses: " + d.message);
+      }
     } catch {
       alert("Terjadi kesalahan jaringan.");
     }
+    
     setIsCheckoutLoading(false);
   };
 
@@ -479,41 +500,15 @@ function MobileLegendsContent() {
               {/* STEP 4: Pembayaran */}
               <Card className="mb-4">
                 <StepLabel n="4" title="Pilih pembayaran" />
-                {paymentMethods.length === 0 && !isLoading ? (
-                  <p className="text-sm" style={{ color: "#DC2626" }}>Metode pembayaran sedang tidak tersedia.</p>
-                ) : (
-                  <div className="space-y-3">
-                    {groupedPayments["QRIS"]?.map(pay => (
-                      <PaymentRow key={pay.paymentMethod} pay={pay} selected={selectedPayment} onSelect={setSelectedPayment} label="QRIS All Payment" fee={pay.totalFee} />
-                    ))}
-                    {categoryOrder.filter(c => c !== "QRIS").map(cat => {
-                      const methods = groupedPayments[cat];
-                      if (!methods?.length) return null;
-                      const isOpen = openCategory === cat;
-                      return (
-                        <div key={cat} className="rounded-xl overflow-hidden" style={{ border: `0.5px solid ${isOpen ? "var(--teal-border)" : "var(--border)"}` }}>
-                          <button
-                            onClick={() => setOpenCategory(isOpen ? null : cat)}
-                            className="w-full flex items-center justify-between px-4 py-3 text-sm font-medium transition"
-                            style={{ background: isOpen ? "var(--teal-light)" : "#fff", color: isOpen ? "var(--teal)" : "var(--text-primary)" }}
-                          >
-                            <span className="flex items-center gap-2">{categoryIcons[cat]} {cat}</span>
-                            <svg className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          </button>
-                          {isOpen && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 p-3" style={{ background: "var(--cream-2)", borderTop: "0.5px solid var(--border)" }}>
-                              {methods.map(pay => (
-                                <PaymentRow key={pay.paymentMethod} pay={pay} selected={selectedPayment} onSelect={setSelectedPayment} fee={pay.totalFee} />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
+                <div className="space-y-3">
+                  <PaymentRow 
+                    pay={{ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 }} 
+                    selected={selectedPayment} 
+                    onSelect={setSelectedPayment} 
+                    label="QRIS All Payment" 
+                    fee={0} 
+                  />
+                </div>
               </Card>
 
               {/* STEP 5: Kode Promo */}

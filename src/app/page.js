@@ -125,6 +125,7 @@ export default function Home() {
     { name:"Draconia Saga",   publisher:"Sugarfun",       link:"/draconia",     isHot:false, image:"/images/DS.png" },
     { name:"Delta Force",     publisher:"TiMi Studio",    link:"/delta-force",  isHot:false, image:"/images/DF.png" },
   ];
+  
   const menuVoucher = [
     { name:"Google Play ID",  publisher:"Google",       link:"/google-play",    isHot:true,  image:"/images/gplay.png" },
     { name:"Garena",          publisher:"Garena",       link:"/garena-voucher", isHot:false, image:"/images/garena.jpg" },
@@ -135,15 +136,16 @@ export default function Home() {
     { name:"e-Meterai",       publisher:"PERURI",       link:"/emeterai",       isHot:false, image:"/images/EM.png" },
     { name:"Viu",             publisher:"PCCW Media",   link:"/viu",            isHot:false, image:"/images/viu.png" },
   ];
+  
   const menuPulsa = [
     { name:"Token PLN",  publisher:"PLN Group",       link:"/pln",       isHot:false, image:"/images/pln.jpg" },
-    { name:"Telkomsel",  publisher:"Telkomsel",        link:"/telkomsel", isHot:true,  image:"/images/telkomsel.png" },
-    { name:"Indosat",    publisher:"Indosat Ooredoo",  link:"/indosat",   isHot:false, image:"/images/indosat.jpg" },
-    { name:"Axis",       publisher:"Axis Telekom",     link:"/axis",      isHot:false, image:"/images/axis.png" },
-    { name:"Smartfren",  publisher:"Smartfren",        link:"/smartfren", isHot:false, image:"/images/smartfren.png" },
-    { name:"Tri",        publisher:"Hutchison 3",      link:"/tri",       isHot:false, image:"/images/tri.jpg" },
-    { name:"XL",         publisher:"XL Axiata",        link:"/xl",        isHot:false, image:"/images/XL.jpg" },
-    { name:"by.U",       publisher:"Telkomsel",        link:"/byu",       isHot:false, image:"/images/by.u.png" },
+    { name:"Telkomsel",  publisher:"Telkomsel",       link:"/telkomsel", isHot:true,  image:"/images/telkomsel.png" },
+    { name:"Indosat",    publisher:"Indosat Ooredoo", link:"/indosat",   isHot:false, image:"/images/indosat.jpg" },
+    { name:"Axis",       publisher:"Axis Telekom",    link:"/axis",      isHot:false, image:"/images/axis.png" },
+    { name:"Smartfren",  publisher:"Smartfren",       link:"/smartfren", isHot:false, image:"/images/smartfren.png" },
+    { name:"Tri",        publisher:"Hutchison 3",     link:"/tri",       isHot:false, image:"/images/tri.jpg" },
+    { name:"XL",         publisher:"XL Axiata",       link:"/xl",        isHot:false, image:"/images/XL.jpg" },
+    { name:"by.U",       publisher:"Telkomsel",       link:"/byu",       isHot:false, image:"/images/by.u.png" },
   ];
 
   const menuTagihan = [
@@ -155,10 +157,10 @@ export default function Home() {
   ];
 
   const sections = [
-    { id:"games",         title:"Top Up Games",      data:menuGames },
-    { id:"voucher",       title:"Voucher Digital",   data:menuVoucher },
-    { id:"pulsa",         title:"Pulsa, Data & PLN", data:menuPulsa },
-    { id:"tagihan",       title:"Bayar Tagihan",     data:menuTagihan },
+    { id:"games",       title:"Top Up Games",      data:menuGames },
+    { id:"voucher",     title:"Voucher Digital",   data:menuVoucher },
+    { id:"pulsa",       title:"Pulsa, Data & PLN", data:menuPulsa },
+    { id:"tagihan",     title:"Bayar Tagihan",     data:menuTagihan },
   ];
 
   const filters = [
@@ -179,6 +181,7 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#FAFAFA] text-slate-800 antialiased selection:bg-emerald-100 selection:text-emerald-800">
+      
       {banners.length > 0 && (
         <section className="bg-white border-b border-slate-100 py-6 md:py-8">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
@@ -205,6 +208,7 @@ export default function Home() {
           </div>
         </section>
       )}
+
       {banners.length === 0 && (
         <section className="bg-white border-b border-slate-100 overflow-hidden py-14 md:py-24">
           <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
@@ -264,9 +268,11 @@ export default function Home() {
           </div>
         </section>
       )}
+
       <div className="max-w-6xl mx-auto px-4 md:px-6 my-4">
         <FlashSale />
       </div>
+      
       <div id="produk" ref={prodRef} className="sticky top-0 z-40 bg-[#FAFAFA]/95 backdrop-blur-md border-b border-slate-100 py-4 shadow-[0_2px_15px_rgba(0,0,0,0.01)]">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar py-1" style={{ scrollbarWidth: "none" }}>
@@ -286,6 +292,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+
       <div className="space-y-4 max-w-6xl mx-auto px-4 md:px-6 pt-6">
         {sections.map(sec => {
           if (activeFilter !== "all" && activeFilter !== sec.id) return null;
@@ -308,9 +315,9 @@ export default function Home() {
           );
         })}
       </div>
+
       <section className="bg-white border-y border-slate-100 py-16 md:py-24 my-16 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          
           <div className="mb-14 max-w-xl text-center md:text-left space-y-2">
             <p className="text-xs font-bold uppercase tracking-widest text-emerald-600">
               KAYANAPAY KEUNGGULAN
@@ -353,23 +360,6 @@ export default function Home() {
             ))}
           </div>
 
-        </div>
-      </section>
-
-      <section className="bg-slate-900 py-12 md:py-16 px-4 md:px-6 rounded-3xl max-w-6xl mx-auto my-16 shadow-xl shadow-slate-950/20">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-px sm:divide-x divide-slate-800 text-center">
-            {[
-              { n:"200+",  l:"Variasi Katalog Produk" },
-              { n:"99.9%", l:"Rasio Keberhasilan Sistem" },
-              { n:"24 Jam",  l:"Layanan Operasional Aktif" },
-            ].map((s) => (
-              <div key={s.l} className="space-y-1 px-4">
-                <p className="text-3xl lg:text-4xl font-black text-white tracking-tight">{s.n}</p>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-slate-500">{s.l}</p>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

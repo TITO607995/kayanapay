@@ -34,12 +34,11 @@ export default function InternetPascabayar() {
   ];
 
   useEffect(() => {
-    fetch("https://kayanamart.my.id/api/payment/methods")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") setPaymentMethods(data.data);
-      })
-      .catch((error) => console.error("Gagal narik payment:", error));
+    setSelectedPayment({
+      paymentMethod: "QRIS",
+      paymentName: "QRIS All Payment",
+      totalFee: 0
+    });
   }, []);
 
   const handleApplyPromo = async (e) => {
@@ -145,8 +144,9 @@ export default function InternetPascabayar() {
       });
 
       const resData = await response.json();
-      if (resData.status === "success") window.location.href = resData.data.paymentUrl; 
-      else {
+      if (d.status === "success") {
+        window.location.href = `/invoice/${d.data.reference}`;
+      } else {
         setErrorMessage("Gagal memproses pembayaran: " + resData.message);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }

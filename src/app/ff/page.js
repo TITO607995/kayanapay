@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
 // ── Toast Notification ───────────────────────────────────────────────────────
@@ -39,6 +39,7 @@ function Toast({ message, type, onClose }) {
 
 function FreeFireContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const skuFlashSale = searchParams.get("sku");
   const [activeTab, setActiveTab] = useState("transaksi");
 
@@ -93,16 +94,19 @@ function FreeFireContent() {
   }, []);
 
   useEffect(() => {
-    fetch("https://kayanamart.my.id/api/topup/products?brand=FREE FIRE")
-      .then(r => r.json())
-      .then(d => { if (d.status === "success") setProducts(d.data); setIsLoading(false); })
-      .catch(e => { console.error(e); setIsLoading(false); });
+  fetch("https://kayanamart.my.id/api/topup/products?brand=FREE FIRE")
+    .then(r => r.json())
+    .then(d => { if (d.status === "success") setProducts(d.data); })
+    .catch(e => console.error(e))
+    .finally(() => setIsLoading(false));
 
-    fetch("https://kayanamart.my.id/api/payment/methods")
-      .then(r => r.json())
-      .then(d => { if (d.status === "success") setPaymentMethods(d.data); })
-      .catch(e => console.error(e));
-  }, []);
+  // 🔥 Langsung set default payment ke QRIS tanpa nembak API (samain kayak ML)
+    setSelectedPayment({
+      paymentMethod: "QRIS",
+      paymentName: "QRIS All Payment",
+      totalFee: 0
+    });
+}, []);
 
   // Auto-cek nickname
   useEffect(() => {
@@ -229,11 +233,13 @@ function FreeFireContent() {
         }),
       });
       const d = await res.json();
-      if (d.status === "success") window.location.href = d.data.paymentUrl;
-      else showToast("Gagal memproses: " + d.message, "error");
-    } catch { showToast("Terjadi kesalahan jaringan.", "error"); }
-    setIsCheckoutLoading(false);
-  };
+      if (d.status === "success") {
+        window.location.href = `/invoice/${d.data.reference}`;
+      } else {
+        showToast("Gagal memproses: " + d.message, "error");
+      }} catch { showToast("Terjadi kesalahan jaringan.", "error"); }
+      setIsCheckoutLoading(false);
+    };
 
   const canCheckout = selectedDenom && selectedPayment && userId && whatsapp && !isCheckoutLoading;
 
@@ -337,77 +343,27 @@ function FreeFireContent() {
               </div>
 
               {/* STEP 4: Pembayaran */}
-              <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
-                  Pilih Pembayaran
-                </h3>
-                {paymentMethods.length === 0 && !isLoading ? (
-                  <p className="text-sm text-red-500 font-medium">Metode pembayaran sedang tidak tersedia.</p>
-                ) : (
-                  <div className="space-y-6">
-                    {groupedPayments["QRIS"]?.map(pay => (
-                      <button key={pay.paymentMethod} onClick={() => setSelectedPayment(pay)}
-                        className={`w-full p-4 rounded-xl border flex flex-col justify-center transition-all ${selectedPayment?.paymentMethod === pay.paymentMethod ? "border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md" : "border-slate-200 bg-white hover:border-emerald-300 hover:shadow-sm"}`}>
-                        <div className="flex justify-between items-center w-full mb-3">
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? "border-emerald-600" : "border-slate-300"}`}>
-                            {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />}
-                          </div>
-                        </div>
-                        <div className="flex justify-between items-end w-full">
-                          <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
-                          <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">
-                            {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
-                          </p>
-                        </div>
-                      </button>
-                    ))}
-                    <div className="space-y-3">
-                      {categoryOrder.filter(c => c !== "QRIS").map(cat => {
-                        const methods = groupedPayments[cat];
-                        if (!methods?.length) return null;
-                        const isOpen = openCategory === cat;
-                        return (
-                          <div key={cat} className={`border rounded-xl overflow-hidden transition-all ${isOpen ? "border-emerald-300 shadow-sm" : "border-slate-200"}`}>
-                            <button onClick={() => setOpenCategory(isOpen ? null : cat)}
-                              className={`w-full flex items-center justify-between p-4 transition-colors ${isOpen ? "bg-emerald-50" : "bg-white hover:bg-slate-50"}`}>
-                              <div className="flex items-center gap-3">
-                                <span className="text-xl">{categoryIcons[cat]}</span>
-                                <span className={`font-bold ${isOpen ? "text-emerald-600" : "text-slate-700"}`}>{cat}</span>
-                              </div>
-                              <svg className={`h-5 w-5 transition-transform ${isOpen ? "rotate-180 text-emerald-500" : "text-slate-400"}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </button>
-                            {isOpen && (
-                              <div className="p-4 bg-slate-50 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-emerald-100">
-                                {methods.map(pay => (
-                                  <button key={pay.paymentMethod} onClick={() => setSelectedPayment(pay)}
-                                    className={`w-full p-3 rounded-xl border flex flex-col justify-center transition-all ${selectedPayment?.paymentMethod === pay.paymentMethod ? "border-emerald-500 bg-white ring-1 ring-emerald-500 shadow-md" : "border-slate-200 bg-white hover:border-emerald-300 hover:shadow-sm"}`}>
-                                    <div className="flex justify-between items-center w-full mb-2">
-                                      <img src={pay.paymentImage} alt={pay.paymentName} className="h-6 object-contain" />
-                                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? "border-emerald-500" : "border-slate-300"}`}>
-                                        {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2 h-2 bg-emerald-500 rounded-full" />}
-                                      </div>
-                                    </div>
-                                    <div className="flex justify-between items-end w-full mt-1">
-                                      <p className="font-bold text-xs text-slate-700 line-clamp-1">{pay.paymentName}</p>
-                                      <p className="text-[11px] font-black text-emerald-500 whitespace-nowrap">
-                                        {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
-                                      </p>
-                                    </div>
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                  <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+                    <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
+                    Pilih Pembayaran
+                  </h3>
+                  <button
+                    onClick={() => setSelectedPayment({ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 })}
+                    className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                  >
+                    <div className="flex justify-between items-center w-full mb-3">
+                      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
+                      <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-emerald-600">
+                        <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                    <div className="flex justify-between items-end w-full">
+                      <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
+                      <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Gratis</p>
+                    </div>
+                  </button>
+                </div>
 
               {/* STEP 5: Kode Promo */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">

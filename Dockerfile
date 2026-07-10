@@ -2,16 +2,20 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Install dependencies terlebih dahulu (biar di-cache sama Docker)
+# Copy package files
 COPY package*.json ./
+
+# Install dependencies (Lakukan sekali di sini)
 RUN npm install
 
-# Copy sisa file project
+# Copy sisa project
 COPY . .
 
-# Expose port untuk Next.js
+# Build aplikasinya (Lakukan sekali di sini)
+RUN npm run build
+
+# Expose port
 EXPOSE 3000
 
-# Gunakan mode DEV agar kode otomatis update saat disave
-CMD npm run build && npm start
-# Atau perintah start production kamu sebelumnya
+# Langsung jalankan aplikasinya
+CMD ["npm", "start"]

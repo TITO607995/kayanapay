@@ -69,19 +69,17 @@ function HonorOfKings() {
         }
         setIsLoading(false);
       })
+      .finally(() => setIsLoading(false))
       .catch((error) => {
         console.error("Gagal narik data:", error);
         setIsLoading(false);
       });
 
-    fetch("https://kayanamart.my.id/api/payment/methods")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "success") {
-          setPaymentMethods(data.data);
-        }
-      })
-      .catch((error) => console.error("Gagal narik payment:", error));
+    setSelectedPayment({
+      paymentMethod: "QRIS",
+      paymentName: "QRIS All Payment",
+      totalFee: 0
+    });
   }, []);
 
   useEffect(() => {
@@ -231,12 +229,11 @@ function HonorOfKings() {
           }),
       });
 
-      const resData = await response.json();
-
-      if (resData.status === "success") {
-        window.location.href = resData.data.paymentUrl; 
+      const d = await response.json();
+      if (d.status === "success") {
+        window.location.href = `/invoice/${d.data.reference}`;
       } else {
-        alert("Gagal memproses pembayaran: " + resData.message);
+        alert("Gagal memproses: " + d.message);
       }
     } catch (error) {
       alert("Terjadi kesalahan jaringan.");
@@ -358,107 +355,24 @@ function HonorOfKings() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
+                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
                   Pilih Pembayaran
                 </h3>
-                {paymentMethods.length === 0 && !isLoading ? (
-                  <p className="text-sm text-red-500 font-medium">Metode pembayaran sedang tidak tersedia.</p>
-                ) : (
-                  <div className="space-y-6">
-
-                    {groupedPayments["QRIS"] && groupedPayments["QRIS"].length > 0 && (
-                      <div>
-                        <div className="grid grid-cols-1 gap-3">
-                          {groupedPayments["QRIS"].map((pay) => {
-                            const displayName = "QRIS All Payment";
-                            const displayImage = "https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg";
-                            return (
-                              <button 
-                                key={pay.paymentMethod}
-                                onClick={() => setSelectedPayment(pay)}
-                                className={`w-full p-4 rounded-xl border flex flex-col justify-center transition-all ${
-                                  selectedPayment?.paymentMethod === pay.paymentMethod 
-                                  ? "border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md" 
-                                  : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
-                                }`}
-                              >
-                                <div className="flex justify-between items-center w-full mb-3">
-                                  <div className="h-8 flex items-center justify-start">
-                                    <img src={displayImage} alt={displayName} className="h-full object-contain" />
-                                  </div>
-                                  <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-emerald-600' : 'border-slate-300'}`}>
-                                    {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full"></div>}
-                                  </div>
-                                </div>
-                                <div className="flex justify-between items-end w-full">
-                                  <p className="font-bold text-sm text-slate-800 text-left">{displayName}</p>
-                                  <p className="text-xs font-black text-emerald-600 bg-blue-100 px-2 py-1 rounded-md">
-                                    {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
-                                  </p>
-                                </div>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="space-y-3">
-                      {categoryOrder.filter(cat => cat !== "QRIS").map((category) => {
-                        const methods = groupedPayments[category];
-                        if (!methods || methods.length === 0) return null; 
-                        const isOpen = openCategory === category;
-                        
-                        return (
-                          <div key={category} className={`border rounded-xl overflow-hidden transition-all duration-300 ${isOpen ? 'border-blue-300 shadow-sm' : 'border-slate-200'}`}>
-                            <button 
-                              onClick={() => setOpenCategory(isOpen ? null : category)}
-                              className={`w-full flex items-center justify-between p-4 transition-colors ${isOpen ? 'bg-emerald-50' : 'bg-white hover:bg-slate-50'}`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <span className="text-xl">{categoryIcons[category]}</span>
-                                <span className={`font-bold ${isOpen ? 'text-emerald-600' : 'text-slate-700'}`}>{category}</span>
-                              </div>
-                              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 transition-transform duration-300 ${isOpen ? 'rotate-180 text-emerald-500' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                              </svg>
-                            </button>
-                            {isOpen && (
-                              <div className="p-4 bg-slate-50 grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-blue-100">
-                                {methods.map((pay) => (
-                                  <button 
-                                    key={pay.paymentMethod}
-                                    onClick={() => setSelectedPayment(pay)}
-                                    className={`w-full p-3 rounded-xl border flex flex-col justify-center transition-all ${
-                                      selectedPayment?.paymentMethod === pay.paymentMethod 
-                                      ? "border-emerald-500 bg-white ring-1 ring-emerald-500 shadow-md" 
-                                      : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
-                                    }`}
-                                  >
-                                    <div className="flex justify-between items-center w-full mb-2">
-                                      <div className="h-6 flex items-center justify-start">
-                                        <img src={pay.paymentImage} alt={pay.paymentName} className="h-full object-contain" />
-                                      </div>
-                                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedPayment?.paymentMethod === pay.paymentMethod ? 'border-emerald-500' : 'border-slate-300'}`}>
-                                        {selectedPayment?.paymentMethod === pay.paymentMethod && <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>}
-                                      </div>
-                                    </div>
-                                    <div className="flex justify-between items-end w-full mt-1">
-                                      <p className="font-bold text-xs text-slate-700 text-left line-clamp-1">{pay.paymentName}</p>
-                                      <p className="text-[11px] font-black text-emerald-500 whitespace-nowrap">
-                                        {pay.totalFee == 0 ? "Gratis" : `+ ${formatRupiah(pay.totalFee)}`}
-                                      </p>
-                                    </div>
-                                  </button>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
+                <button
+                  onClick={() => setSelectedPayment({ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 })}
+                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                >
+                  <div className="flex justify-between items-center w-full mb-3">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
+                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-emerald-600">
+                      <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />
                     </div>
                   </div>
-                )}
+                  <div className="flex justify-between items-end w-full">
+                    <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
+                    <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Gratis</p>
+                  </div>
+                </button>
               </div>
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
