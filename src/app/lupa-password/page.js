@@ -92,7 +92,7 @@ export default function ForgotPasswordPage() {
       <div className="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
         
         {/* Header Biru/Hijau Kayana */}
-        <div className="bg-emerald-600 p-6 text-center text-white">
+        <div className="bg-blue-600 p-6 text-center text-white">
           <h1 className="text-2xl font-black tracking-tight">KAYANAPAY</h1>
           <p className="text-emerald-100 text-sm mt-1">Pemulihan Akses Akun</p>
         </div>
@@ -106,7 +106,7 @@ export default function ForgotPasswordPage() {
             </div>
           )}
           {successMessage && (
-            <div className="mb-4 p-3 bg-emerald-50 text-emerald-600 border border-emerald-100 rounded-xl text-sm font-bold text-center">
+            <div className="mb-4 p-3 bg-blue-50 text-blue-600 border border-blue-100 rounded-xl text-sm font-bold text-center">
               {successMessage}
             </div>
           )}
@@ -134,14 +134,14 @@ export default function ForgotPasswordPage() {
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
                   placeholder="Contoh: 081234567890"
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-emerald-200 transition font-medium"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-emerald-500/30 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl transition shadow-md shadow-blue-500/30 flex justify-center items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
               >
                 {isLoading ? (
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -154,7 +154,7 @@ export default function ForgotPasswordPage() {
                 <button 
                   type="button" 
                   onClick={() => router.push("/masuk")}
-                  className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition"
+                  className="text-sm font-bold text-slate-500 hover:text-blue-600 transition"
                 >
                   Batal dan kembali ke Login
                 </button>
@@ -169,7 +169,7 @@ export default function ForgotPasswordPage() {
           {step === 2 && (
             <form onSubmit={handleResetPassword} className="space-y-5">
               <div className="text-center mb-6">
-                <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-3">
+                <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-3">
                   <span className="text-2xl">🔐</span>
                 </div>
                 <h2 className="text-lg font-bold text-slate-800">Verifikasi OTP</h2>
@@ -186,7 +186,7 @@ export default function ForgotPasswordPage() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value)}
                   placeholder="Masukkan 6 digit angka"
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition font-bold text-center tracking-[0.5em]"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-emerald-200 transition font-bold text-center tracking-[0.5em]"
                 />
               </div>
 
@@ -199,7 +199,7 @@ export default function ForgotPasswordPage() {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Minimal 6 karakter"
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition font-medium"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-emerald-200 transition font-medium"
                 />
               </div>
 
@@ -219,7 +219,7 @@ export default function ForgotPasswordPage() {
                 <button 
                   type="button" 
                   onClick={() => setStep(1)}
-                  className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition"
+                  className="text-sm font-bold text-slate-500 hover:text-blue-600 transition"
                 >
                   Kirim ulang OTP ke nomor lain
                 </button>

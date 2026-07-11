@@ -9,7 +9,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 const StepLabel = ({ n, title, optional }) => (
   <div className="flex items-center gap-2.5 mb-4">
     <div className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold text-white flex-shrink-0"
-      style={{ background: "var(--teal)" }}>
+      style={{ background: "#2563EB" }}>
       {n}
     </div>
     <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>
@@ -30,7 +30,7 @@ const InputField = ({ ...props }) => (
     {...props}
     className="w-full text-sm rounded-xl px-4 py-2.5 outline-none transition-all"
     style={{ background: "var(--cream-2)", border: "0.5px solid var(--border)", color: "var(--text-primary)" }}
-    onFocus={e => { e.target.style.background = "#fff"; e.target.style.borderColor = "var(--teal)"; }}
+    onFocus={e => { e.target.style.background = "#fff"; e.target.style.borderColor = "#2563EB"; }}
     onBlur={e => { e.target.style.background = "var(--cream-2)"; e.target.style.borderColor = "var(--border)"; }}
   />
 );
@@ -216,7 +216,6 @@ function MobileLegendsContent() {
   const categoryOrder = ["QRIS", "E-Wallet", "Virtual Account", "Minimarket", "Lainnya"];
   const categoryIcons = { "QRIS": "🔳", "E-Wallet": "👛", "Virtual Account": "🏦", "Minimarket": "🏪", "Lainnya": "💳" };
 
-  // ── Checkout ──────────────────────────────────────────────────────────────
   // ── Checkout (Murni Push Halaman ke Invoice) ──────────────────────────────
   const handleCheckout = async () => {
     if (!userId || !zoneId || !whatsapp) {
@@ -273,7 +272,7 @@ function MobileLegendsContent() {
   const Description = () => (
     <div className="space-y-5">
       <Card>
-        <div className="border-l-2 pl-3 mb-4" style={{ borderColor: "var(--teal)" }}>
+        <div className="border-l-2 pl-3 mb-4" style={{ borderColor: "#2563EB" }}>
           <h3 className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Deskripsi Mobile Legends</h3>
         </div>
         <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
@@ -285,7 +284,7 @@ function MobileLegendsContent() {
             {["Masukkan User ID & Zone ID akun ML kamu", "Pilih nominal diamond yang diinginkan", "Tentukan jumlah pembelian", "Pilih metode pembayaran", "Masukkan kode promo (jika ada)", "Isi nomor WhatsApp aktif", "Klik Bayar Sekarang dan selesaikan pembayaran", "Diamond otomatis masuk ke akun kamu"].map((s, i) => (
               <li key={i} className="flex items-start gap-2.5">
                 <span className="w-5 h-5 min-w-5 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0 mt-0.5"
-                  style={{ background: "var(--teal-light)", color: "var(--teal)", border: "0.5px solid var(--teal-border)" }}>
+                  style={{ background: "#EFF6FF", color: "#2563EB", border: "0.5px solid #BFDBFE" }}>
                   {i + 1}
                 </span>
                 <span className="text-sm leading-snug" style={{ color: "var(--text-secondary)" }}>{s}</span>
@@ -305,7 +304,7 @@ function MobileLegendsContent() {
       </h3>
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 relative overflow-hidden"
-          style={{ background: "var(--teal-light)", border: "0.5px solid var(--teal-border)" }}>
+          style={{ background: "#EFF6FF", border: "0.5px solid #BFDBFE" }}>
           <Image src="/images/ml.png" alt="Mobile Legends" fill className="object-cover" sizes="40px" />
         </div>
         <div>
@@ -332,7 +331,7 @@ function MobileLegendsContent() {
       </div>
       <div className="flex justify-between items-baseline mb-5">
         <span className="text-sm font-semibold" style={{ color: "var(--text-primary)" }}>Total bayar</span>
-        <span className="text-xl font-semibold" style={{ color: "var(--teal)" }}>
+        <span className="text-xl font-semibold" style={{ color: "#2563EB" }}>
           {selectedDenom ? formatRupiah(finalTotal) : "–"}
         </span>
       </div>
@@ -341,7 +340,7 @@ function MobileLegendsContent() {
         disabled={!canCheckout}
         className="w-full py-3 rounded-xl text-sm font-semibold transition-all flex items-center justify-center gap-2"
         style={canCheckout
-          ? { background: "var(--teal)", color: "#fff", cursor: "pointer" }
+          ? { background: "#2563EB", color: "#fff", cursor: "pointer" }
           : { background: "var(--cream-3)", color: "var(--text-tertiary)", cursor: "not-allowed" }
         }
       >
@@ -364,19 +363,11 @@ function MobileLegendsContent() {
     <main className="pb-28 lg:pb-12" style={{ minHeight: "100vh", background: "var(--cream)" }}>
       <div className="max-w-6xl mx-auto px-4 py-6">
 
-        {/* Breadcrumb */}
-        <nav className="text-xs mb-5 flex items-center gap-1.5" style={{ color: "var(--text-tertiary)" }}>
-          <Link href="/" style={{ color: "var(--text-tertiary)" }}>Beranda</Link>
-          <span>/</span>
-          <span>Top Up Game</span>
-          <span>/</span>
-          <span style={{ color: "var(--text-primary)" }}>Mobile Legends</span>
-        </nav>
 
         {/* Header game */}
         <Card className="flex items-center gap-4 mb-6">
           <div className="relative w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden"
-            style={{ background: "var(--teal-light)", border: "0.5px solid var(--teal-border)" }}>
+            style={{ background: "#EFF6FF", border: "0.5px solid #BFDBFE" }}>
             <Image src="/images/ml.png" alt="Mobile Legends" fill className="object-cover" sizes="56px" />
           </div>
           <div className="flex-1">
@@ -384,8 +375,8 @@ function MobileLegendsContent() {
             <p className="text-sm mt-1 flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
               Moonton
               <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-0.5 rounded-full"
-                style={{ background: "#ECFDF5", color: "#059669", border: "0.5px solid #A7F3D0" }}>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block"></span>
+                style={{ background: "#EFF6FF", color: "#2563EB", border: "0.5px solid #BFDBFE" }}>
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse inline-block"></span>
                 Proses instan
               </span>
             </p>
@@ -400,7 +391,7 @@ function MobileLegendsContent() {
               onClick={() => setActiveTab(tab)}
               className="flex-1 py-2.5 rounded-lg text-sm font-medium capitalize transition-all"
               style={activeTab === tab
-                ? { background: "#fff", color: "var(--teal)", border: "0.5px solid var(--teal-border)" }
+                ? { background: "#fff", color: "#2563EB", border: "0.5px solid #BFDBFE" }
                 : { background: "transparent", color: "var(--text-secondary)", border: "none" }
               }
             >
@@ -427,9 +418,9 @@ function MobileLegendsContent() {
                   </div>
                 </div>
                 <div className="h-5 mt-2 pl-1">
-                  {isChecking && <p className="text-xs animate-pulse" style={{ color: "var(--teal)" }}>Mencari nickname...</p>}
+                  {isChecking && <p className="text-xs animate-pulse" style={{ color: "#2563EB" }}>Mencari nickname...</p>}
                   {!isChecking && nickname && (
-                    <p className="text-xs font-medium" style={{ color: nickname.includes("✗") ? "#DC2626" : "var(--teal)" }}>{nickname}</p>
+                    <p className="text-xs font-medium" style={{ color: nickname.includes("✗") ? "#DC2626" : "#2563EB" }}>{nickname}</p>
                   )}
                 </div>
               </Card>
@@ -515,7 +506,7 @@ function MobileLegendsContent() {
               <Card className="mb-4">
                 <StepLabel n="5" title="Kode promo" optional />
                 {appliedPromo ? (
-                  <div className="rounded-xl p-3.5 mb-3" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                  <div className="rounded-xl p-3.5 mb-3" style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}>
                     <div className="flex items-center justify-between gap-3">
                       <div>
                         <p className="text-sm font-bold" style={{ color: "#059669" }}>✓ {appliedPromo}</p>
@@ -546,7 +537,7 @@ function MobileLegendsContent() {
                       disabled={promoLoading || !promoCode.trim()}
                       className="px-4 py-2.5 rounded-xl text-sm font-medium transition"
                       style={{
-                        background: promoLoading || !promoCode.trim() ? "var(--cream-3)" : "var(--teal)",
+                        background: promoLoading || !promoCode.trim() ? "var(--cream-3)" : "#2563EB",
                         color: promoLoading || !promoCode.trim() ? "var(--text-tertiary)" : "#fff",
                         border: "0.5px solid var(--border)",
                         cursor: promoLoading || !promoCode.trim() ? "not-allowed" : "pointer"
@@ -633,7 +624,7 @@ function MobileLegendsContent() {
                   {memberData && memberData.whatsapp === whatsapp && (
                     <span
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium px-2 py-0.5 rounded-full pointer-events-none"
-                      style={{ background: "#ECFDF5", color: "#059669", border: "0.5px solid #A7F3D0" }}
+                      style={{ background: "#EFF6FF", color: "#059669", border: "0.5px solid #A7F3D0" }}
                     >
                       ✓ Dari profil
                     </span>
@@ -669,7 +660,7 @@ function MobileLegendsContent() {
           {selectedDenom && (
             <div className="flex justify-between items-center mb-2 px-1">
               <span className="text-xs font-medium" style={{ color: "var(--text-secondary)" }}>Total bayar</span>
-              <span className="text-lg font-semibold" style={{ color: "var(--teal)" }}>{formatRupiah(finalTotal)}</span>
+              <span className="text-lg font-semibold" style={{ color: "#2563EB" }}>{formatRupiah(finalTotal)}</span>
             </div>
           )}
           <button
@@ -677,7 +668,7 @@ function MobileLegendsContent() {
             disabled={!canCheckout}
             className="w-full py-3 rounded-xl text-sm font-semibold transition-all"
             style={canCheckout
-              ? { background: "var(--teal)", color: "#fff", cursor: "pointer" }
+              ? { background: "#2563EB", color: "#fff", cursor: "pointer" }
               : { background: "var(--cream-3)", color: "var(--text-tertiary)", cursor: "not-allowed" }
             }
           >
@@ -697,15 +688,15 @@ function DenomBtn({ item, selected, onSelect }) {
       onClick={() => onSelect(item)}
       className="p-3 rounded-xl border text-left transition-all"
       style={{
-        background: isOn ? "var(--teal-light)" : "var(--cream-2)",
-        borderColor: isOn ? "var(--teal)" : "var(--border)",
-        boxShadow: isOn ? "0 0 0 1px var(--teal)" : "none",
+        background: isOn ? "#EFF6FF" : "var(--cream-2)",
+        borderColor: isOn ? "#2563EB" : "var(--border)",
+        boxShadow: isOn ? "0 0 0 1px #2563EB" : "none",
       }}
     >
       <p className="text-xs font-medium leading-snug" style={{ color: "var(--text-primary)" }}>
         {item.product_name.replace("MOBILELEGEND - ", "")}
       </p>
-      <p className="text-xs font-semibold mt-1" style={{ color: "var(--teal)" }}>
+      <p className="text-xs font-semibold mt-1" style={{ color: "#2563EB" }}>
         {new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0 }).format(item.price_sell)}
       </p>
     </button>
@@ -720,8 +711,8 @@ function PaymentRow({ pay, selected, onSelect, label, fee }) {
       onClick={() => onSelect(pay)}
       className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border transition-all text-left"
       style={{
-        background: isOn ? "var(--teal-light)" : "#fff",
-        borderColor: isOn ? "var(--teal)" : "var(--border)",
+        background: isOn ? "#EFF6FF" : "#fff",
+        borderColor: isOn ? "#2563EB" : "var(--border)",
       }}
     >
       {pay.paymentImage ? (
@@ -733,12 +724,12 @@ function PaymentRow({ pay, selected, onSelect, label, fee }) {
         <p className="text-sm font-medium truncate" style={{ color: "var(--text-primary)" }}>{displayLabel}</p>
       </div>
       <span className="text-xs font-semibold flex-shrink-0 px-2 py-0.5 rounded-lg"
-        style={{ background: "var(--teal-light)", color: "var(--teal)", border: "0.5px solid var(--teal-border)" }}>
+        style={{ background: "#EFF6FF", color: "#2563EB", border: "0.5px solid #BFDBFE" }}>
         {parseInt(fee) === 0 ? "Gratis" : `+ Rp ${parseInt(fee).toLocaleString("id-ID")}`}
       </span>
       <div className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center"
-        style={{ border: `1.5px solid ${isOn ? "var(--teal)" : "var(--border-dark)"}` }}>
-        {isOn && <div className="w-2 h-2 rounded-full" style={{ background: "var(--teal)" }}></div>}
+        style={{ border: `1.5px solid ${isOn ? "#2563EB" : "var(--border-dark)"}` }}>
+        {isOn && <div className="w-2 h-2 rounded-full" style={{ background: "#2563EB" }}></div>}
       </div>
     </button>
   );
@@ -749,7 +740,7 @@ export default function MobileLegendsPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center" style={{ background: "var(--cream)" }}>
-        <p className="text-sm animate-pulse" style={{ color: "var(--teal)" }}>Menyiapkan halaman...</p>
+        <p className="text-sm animate-pulse" style={{ color: "#2563EB" }}>Menyiapkan halaman...</p>
       </div>
     }>
       <MobileLegendsContent />

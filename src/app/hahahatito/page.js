@@ -31,7 +31,7 @@ export default function AdminDashboard() {
 
   const statusStyle = (status) => {
     const s = status?.toUpperCase();
-    if (s === "SUKSES")  return "bg-emerald-50 text-emerald-700 border-emerald-200";
+    if (s === "SUKSES")  return "bg-blue-50 text-blue-700 border-emerald-200";
     if (s === "PENDING" || s === "UNPAID") return "bg-amber-50 text-amber-700 border-amber-200";
     if (s === "GAGAL")   return "bg-red-50 text-red-700 border-red-200";
     return "bg-slate-100 text-slate-600 border-slate-200";
@@ -93,7 +93,7 @@ export default function AdminDashboard() {
           label="Omset hari ini"
           value={formatRupiah(stats.hari_ini.omset)}
           sub={`${stats.hari_ini.sukses} transaksi sukses`}
-          subColor="text-emerald-600"
+          subColor="text-blue-600"
         />
         <MetricCard
           label="Transaksi hari ini"
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
                         day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit"
                       })}
                     </td>
-                    <td className="px-5 py-3.5 font-mono text-xs text-emerald-600 whitespace-nowrap">
+                    <td className="px-5 py-3.5 font-mono text-xs text-blue-600 whitespace-nowrap">
                       {trx.reference}
                     </td>
                     <td className="px-5 py-3.5 text-slate-700 font-medium whitespace-nowrap">

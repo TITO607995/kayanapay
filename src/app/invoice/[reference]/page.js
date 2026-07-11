@@ -50,10 +50,10 @@ export default function InvoicePage() {
         switch(status) {
             case 'SUKSES': 
                 return { 
-                    bg: 'bg-emerald-50/50', 
-                    text: 'text-emerald-700', 
-                    ring: 'ring-1 ring-inset ring-emerald-600/20',
-                    dot: 'bg-emerald-500',
+                    bg: 'bg-blue-50/50', 
+                    text: 'text-blue-700', 
+                    ring: 'ring-1 ring-inset ring-blue-600/20',
+                    dot: 'bg-blue-500',
                     label: 'Pembayaran Berhasil' 
                 };
             case 'PAID': 

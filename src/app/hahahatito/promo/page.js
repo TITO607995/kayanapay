@@ -194,7 +194,7 @@ export default function KelolaPromoPage() {
           <div className="flex items-center justify-between pt-4 border-t border-slate-100">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="checkbox" name="is_active" checked={formData.is_active} onChange={handleChange}
-                className="w-4 h-4 accent-emerald-600 cursor-pointer" />
+                className="w-4 h-4 accent-blue-600 cursor-pointer" />
               <span className="text-sm text-slate-700">Aktifkan promo ini</span>
             </label>
             <div className="flex gap-2">
@@ -243,7 +243,7 @@ export default function KelolaPromoPage() {
                 {promos.map((p) => (
                   <tr key={p.id} className="border-b border-slate-50 hover:bg-slate-50 transition">
                     <td className="px-5 py-3.5">
-                      <span className="font-mono text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100 tracking-widest">
+                      <span className="font-mono text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100 tracking-widest">
                         {p.code}
                       </span>
                     </td>
@@ -259,7 +259,7 @@ export default function KelolaPromoPage() {
                       {p.valid_until ? new Date(p.valid_until).toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "Selamanya"}
                     </td>
                     <td className="px-5 py-3.5 text-center">
-                      <span className={`text-[10px] px-2 py-1 rounded-lg font-medium border ${p.is_active ? "bg-emerald-50 text-emerald-700 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
+                      <span className={`text-[10px] px-2 py-1 rounded-lg font-medium border ${p.is_active ? "bg-blue-50 text-blue-700 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
                         {p.is_active ? "Aktif" : "Nonaktif"}
                       </span>
                     </td>

@@ -36,7 +36,7 @@ function ConfirmModal({ message, onConfirm, onCancel }) {
 // ── Status badge style ────────────────────────────────────────────────────────
 const statusStyle = (s) => {
   const u = s?.toUpperCase();
-  if (u === "SUKSES")  return "bg-emerald-50 text-emerald-700 border-emerald-200";
+  if (u === "SUKSES")  return "bg-blue-50 text-blue-700 border-emerald-200";
   if (u === "PENDING") return "bg-amber-50 text-amber-700 border-amber-200";
   if (u === "GAGAL")   return "bg-red-50 text-red-700 border-red-200";
   if (u === "UNPAID")  return "bg-slate-100 text-slate-600 border-slate-200";
@@ -231,7 +231,7 @@ export default function KelolaTransaksiPage() {
                         {new Date(trx.created_at).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="font-mono text-xs text-emerald-600 font-semibold block">{trx.reference}</span>
+                        <span className="font-mono text-xs text-blue-600 font-semibold block">{trx.reference}</span>
                         {trx.customer_whatsapp && (
                           <button onClick={() => openWhatsApp(trx.customer_whatsapp, trx.reference, trx.product_name)}
                             className="mt-1 text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded-lg hover:bg-green-100 transition">
@@ -263,7 +263,7 @@ export default function KelolaTransaksiPage() {
                           <div className="flex gap-1">
                             <button onClick={() => handleForceSuccess(trx.reference)}
                               disabled={trx.status === "SUKSES"}
-                              className="flex-1 text-[10px] px-2 py-1 rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed font-medium">
+                              className="flex-1 text-[10px] px-2 py-1 rounded-lg border border-emerald-200 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white transition disabled:opacity-30 disabled:cursor-not-allowed font-medium">
                               ✅ Sukses
                             </button>
                             <button onClick={() => handleCancel(trx.reference)}

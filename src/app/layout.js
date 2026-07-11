@@ -27,8 +27,7 @@ export default function RootLayout({ children }) {
         <title>KayanaPay – Bayar Semua Kebutuhan Digital</title>
         <meta name="description" content="Top up game, bayar tagihan listrik, air, pulsa, BPJS – cepat, murah, dan aman untuk semua kalangan." />
       </head>
-      {/* Background utama dibiarkan netral, tapi kita pastikan minimalis */}
-      <body className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 font-sans antialiased selection:bg-teal-100 selection:text-teal-900">
+      <body className="min-h-screen flex flex-col bg-[#F8FAFC] text-slate-900 antialiased selection:bg-blue-100 selection:text-blue-900">
 
         {/* ===== PREMIUM NAVBAR ===== */}
         {!isAdminPage && (
@@ -38,18 +37,18 @@ export default function RootLayout({ children }) {
               {/* Brand Logo */}
               <Link href="/" className="flex-shrink-0 group">
                 <span className="text-[20px] font-bold tracking-tight text-slate-900">
-                  Kayana<span className="text-teal-600">Pay</span>
+                  Kayana<span className="text-blue-600">Pay</span>
                 </span>
               </Link>
 
-              {/* Desktop Search (Clean & Modern) */}
+              {/* Desktop Search */}
               <div className="flex-1 max-w-md hidden md:block mx-auto">
                 <div className="relative group">
-                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-teal-600 transition-colors duration-300" />
+                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
                   <input
                     type="text"
                     placeholder="Cari produk, tagihan, game..."
-                    className="w-full text-[14px] rounded-2xl pl-10 pr-4 py-2.5 outline-none bg-slate-50 border border-slate-100 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all duration-300 text-slate-800 placeholder:text-slate-400"
+                    className="w-full text-[14px] rounded-2xl pl-10 pr-4 py-2.5 outline-none bg-slate-50 border border-slate-100 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-300 text-slate-800 placeholder:text-slate-400"
                   />
                 </div>
               </div>
@@ -77,7 +76,7 @@ export default function RootLayout({ children }) {
 
                 {/* Auth Buttons */}
                 {isLoggedIn ? (
-                  <Link href="/member" className="flex items-center gap-2 text-[14px] font-semibold px-4 py-2.5 rounded-xl text-teal-700 bg-teal-50 hover:bg-teal-100 transition-colors duration-200">
+                  <Link href="/member" className="flex items-center gap-2 text-[14px] font-semibold px-4 py-2.5 rounded-xl text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors duration-200">
                     <User size={16} /> Profil
                   </Link>
                 ) : (
@@ -110,7 +109,7 @@ export default function RootLayout({ children }) {
                     type="text"
                     autoFocus
                     placeholder="Cari produk, tagihan, game..."
-                    className="w-full text-[14px] rounded-2xl pl-10 pr-4 py-3 outline-none bg-slate-50 border border-slate-100 focus:bg-white focus:border-teal-500 focus:ring-4 focus:ring-teal-500/10 transition-all text-slate-800"
+                    className="w-full text-[14px] rounded-2xl pl-10 pr-4 py-3 outline-none bg-slate-50 border border-slate-100 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-800"
                   />
                 </div>
               </div>
@@ -147,7 +146,7 @@ export default function RootLayout({ children }) {
                 <div className="md:col-span-5 lg:col-span-5">
                   <Link href="/" className="inline-block mb-5">
                     <span className="text-[22px] font-bold tracking-tight text-slate-900">
-                      Kayana<span className="text-teal-600">Pay</span>
+                      Kayana<span className="text-blue-600">Pay</span>
                     </span>
                   </Link>
                   <p className="text-[14px] leading-relaxed text-slate-500 max-w-sm mb-6">
@@ -156,8 +155,8 @@ export default function RootLayout({ children }) {
                   
                   {/* Premium Badges */}
                   <div className="flex gap-2">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 text-[11px] font-bold uppercase tracking-wide">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-50 border border-blue-100 text-blue-700 text-[11px] font-bold uppercase tracking-wide">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                       24 Jam
                     </span>
                     <span className="inline-flex items-center px-3 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-600 text-[11px] font-bold uppercase tracking-wide">
@@ -173,7 +172,7 @@ export default function RootLayout({ children }) {
                     <ul className="space-y-3.5">
                       {["Beranda", "Cek Pesanan"].map((label, idx) => (
                         <li key={idx}>
-                          <Link href={idx === 0 ? "/" : "/cek-pesanan"} className="text-[14px] text-slate-500 hover:text-teal-600 transition-colors duration-200">
+                          <Link href={idx === 0 ? "/" : "/cek-pesanan"} className="text-[14px] text-slate-500 hover:text-blue-600 transition-colors duration-200">
                             {label}
                           </Link>
                         </li>
@@ -186,7 +185,7 @@ export default function RootLayout({ children }) {
                     <ul className="space-y-3.5">
                       {["Top Up Game", "Pulsa & Data", "PPOB / Tagihan", "Voucher Digital"].map((label, idx) => (
                         <li key={idx}>
-                          <span className="text-[14px] text-slate-500 cursor-pointer hover:text-teal-600 transition-colors duration-200">{label}</span>
+                          <span className="text-[14px] text-slate-500 cursor-pointer hover:text-blue-600 transition-colors duration-200">{label}</span>
                         </li>
                       ))}
                     </ul>
@@ -196,47 +195,47 @@ export default function RootLayout({ children }) {
                     <h3 className="text-[12px] font-bold uppercase tracking-widest text-slate-900 mb-5">Legalitas</h3>
                     <ul className="space-y-3.5">
                       <li>
-                        <Link href="/terms-of-service" className="text-[14px] text-slate-500 hover:text-teal-600 transition-colors duration-200">Syarat & Ketentuan</Link>
+                        <Link href="/terms-of-service" className="text-[14px] text-slate-500 hover:text-blue-600 transition-colors duration-200">Syarat & Ketentuan</Link>
                       </li>
                       <li>
-                        <Link href="/privacy-policy" className="text-[14px] text-slate-500 hover:text-teal-600 transition-colors duration-200">Kebijakan Privasi</Link>
+                        <Link href="/privacy-policy" className="text-[14px] text-slate-500 hover:text-blue-600 transition-colors duration-200">Kebijakan Privasi</Link>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
 
-              {/* Bottom Section (Copyright & Socials) */}
+              {/* Bottom Section */}
               <div className="pt-8 border-t border-slate-100 flex flex-col-reverse md:flex-row justify-between items-center gap-6">
                 <p className="text-[13px] text-slate-400 font-medium">
                   © 2026 PT Kayana Jaya Makmur. All rights reserved.
                 </p>
                 
-              <div className="flex items-center gap-3">
-                <a href="https://wa.me/6285236509562" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-teal-50 hover:text-teal-600 transition-all duration-200 hover:-translate-y-0.5" aria-label="WhatsApp">
-                  <Phone size={18} />
-                </a>
-                <a href="https://instagram.com/rfdto._" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition-all duration-200 hover:-translate-y-0.5" aria-label="Instagram">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                  </svg>
-                </a>
-              </div>
+                <div className="flex items-center gap-3">
+                  <a href="https://wa.me/6285236509562" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 hover:-translate-y-0.5">
+                    <Phone size={18} />
+                  </a>
+                  <a href="https://instagram.com/rfdto._" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-500 hover:bg-pink-50 hover:text-pink-600 transition-all duration-200 hover:-translate-y-0.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
+                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
+                    </svg>
+                  </a>
+                </div>
               </div>
 
             </div>
           </footer>
         )}
 
-        {/* ===== FLOATING WHATSAPP BUTTON (Premium Clean) ===== */}
+        {/* ===== FLOATING WHATSAPP BUTTON ===== */}
         {!isAdminPage && (
           <a
             href="https://wa.me/6285236509562"
             target="_blank"
             rel="noopener noreferrer"
-            className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-[52px] h-[52px] rounded-full bg-teal-600 text-white shadow-[0_8px_30px_rgb(13,148,136,0.3)] hover:bg-teal-700 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(13,148,136,0.4)] transition-all duration-300"
+            className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-[52px] h-[52px] rounded-full bg-blue-600 text-white shadow-lg hover:bg-blue-700 hover:-translate-y-1 transition-all duration-300"
             title="Hubungi CS via WhatsApp"
           >
             <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">

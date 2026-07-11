@@ -29,7 +29,7 @@ function AuthSuccessContent() {
   return (
     <div className="text-center">
       {/* Spinner Loading Keren */}
-      <div className="w-16 h-16 border-4 border-emerald-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
+      <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
       <h2 className="text-2xl font-bold text-slate-800 mb-2">Sinkronisasi Berhasil!</h2>
       <p className="text-sm text-slate-500 animate-pulse font-medium">
         Menghubungkan akun Google Anda ke KayanaPay...

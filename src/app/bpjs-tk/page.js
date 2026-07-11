@@ -168,38 +168,38 @@ export default function BpjsTK() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
                   Pilih Pembayaran
                 </h3>
                 <button
                   onClick={() => setSelectedPayment({ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 })}
-                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-blue-500 bg-blue-50 ring-2 ring-blue-500 shadow-md"
                 >
                   <div className="flex justify-between items-center w-full mb-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
-                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-emerald-600">
-                      <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />
+                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-blue-600">
+                      <div className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
                     </div>
                   </div>
                   <div className="flex justify-between items-end w-full">
                     <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
-                    <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Gratis</p>
+                    <p className="text-xs font-black text-blue-600 bg-blue-100 px-2 py-1 rounded-md">Gratis</p>
                   </div>
                 </button>
               </div>
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
                   Kode Promo <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                 </h3>
 
                 {appliedPromo ? (
-                  <div className="rounded-xl p-3.5" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                  <div className="rounded-xl p-3.5" style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}>
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-bold text-emerald-700">✓ {appliedPromo}</p>
-                        <p className="text-xs mt-1 text-emerald-600">
+                        <p className="text-sm font-bold text-blue-700">✓ {appliedPromo}</p>
+                        <p className="text-xs mt-1 text-blue-600">
                           Diskon: {formatRupiah(discountAmount)}
                         </p>
                       </div>
@@ -219,7 +219,7 @@ export default function BpjsTK() {
                       placeholder="Masukkan kode promo"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition uppercase"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition uppercase"
                     />
                     <button
                       type="submit"
@@ -240,7 +240,7 @@ export default function BpjsTK() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
                   Detail Kontak
                 </h3>
                 <input 
@@ -248,7 +248,7 @@ export default function BpjsTK() {
                   placeholder="Nomor WhatsApp (08...)" 
                   value={whatsapp || ""}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition" 
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
                 />
                 <p className="text-xs text-slate-400 mt-2">Bukti pembelian akan dikirimkan melalui WhatsApp.</p>
               </div>

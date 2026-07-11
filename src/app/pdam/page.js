@@ -205,7 +205,7 @@ export default function Pdam() {
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         
         <div className="flex items-center gap-4 mb-8 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <div className="w-16 h-16 bg-blue-100 text-emerald-600 rounded-xl flex items-center justify-center text-3xl">💧</div>
+          <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-3xl">💧</div>
           <div>
             <h2 className="text-2xl font-black text-slate-800 uppercase">Tagihan PDAM</h2>
             <p className="text-sm text-slate-500">Cek dan bayar tagihan air tepat waktu.</p>
@@ -219,28 +219,28 @@ export default function Pdam() {
             <div className="bg-white p-2 rounded-2xl shadow-sm border border-slate-200 flex gap-2 lg:hidden">
               <button 
                 onClick={() => setActiveTab("transaksi")}
-                className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${activeTab === "transaksi" ? "bg-emerald-600 text-white shadow-md" : "bg-slate-50 text-slate-500 hover:bg-slate-100"}`}
+                className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${activeTab === "transaksi" ? "bg-blue-600 text-white shadow-md" : "bg-slate-50 text-slate-500 hover:bg-slate-100"}`}
               >Transaksi</button>
               <button 
                 onClick={() => setActiveTab("keterangan")}
-                className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${activeTab === "keterangan" ? "bg-emerald-600 text-white shadow-md" : "bg-slate-50 text-slate-500 hover:bg-slate-100"}`}
+                className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${activeTab === "keterangan" ? "bg-blue-600 text-white shadow-md" : "bg-slate-50 text-slate-500 hover:bg-slate-100"}`}
               >Keterangan</button>
             </div>
 
             <div className={`space-y-6 ${activeTab === "transaksi" ? "block animate-fade-in" : "hidden lg:block"}`}>
               {/* STEP 1: Cek Tagihan */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span> Cek Tagihan</h3>
+                <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span> Cek Tagihan</h3>
                 
                 <div className="flex flex-col gap-3 mb-4">
                   {/* DROPDOWN SEARCH PDAM */}
                   <div className="relative w-full md:w-2/3" ref={dropdownRef}>
-                    <input type="text" placeholder="-- Ketik / Cari Wilayah PDAM --" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setIsDropdownOpen(true); setAreaCode(""); }} onFocus={() => setIsDropdownOpen(true)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-medium cursor-text" />
+                    <input type="text" placeholder="-- Ketik / Cari Wilayah PDAM --" value={searchTerm} onChange={(e) => { setSearchTerm(e.target.value); setIsDropdownOpen(true); setAreaCode(""); }} onFocus={() => setIsDropdownOpen(true)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-medium cursor-text" />
                     {isDropdownOpen && (
                       <div className="absolute z-10 w-full mt-2 bg-white border border-slate-200 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] max-h-[220px] overflow-y-auto">
                         {filteredPdam.length > 0 ? (
                           filteredPdam.map((pdam) => (
-                            <button key={pdam.code} onClick={() => { setAreaCode(pdam.code); setSearchTerm(pdam.name); setIsDropdownOpen(false); }} className="w-full text-left px-4 py-3 hover:bg-emerald-50 transition-colors border-b border-slate-100 last:border-b-0 text-sm font-bold text-slate-700 hover:text-emerald-600">
+                            <button key={pdam.code} onClick={() => { setAreaCode(pdam.code); setSearchTerm(pdam.name); setIsDropdownOpen(false); }} className="w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors border-b border-slate-100 last:border-b-0 text-sm font-bold text-slate-700 hover:text-blue-600">
                               {pdam.name}
                             </button>
                           ))
@@ -253,7 +253,7 @@ export default function Pdam() {
                   </div>
 
                   <div className="flex gap-2 w-full md:w-2/3">
-                    <input type="text" placeholder="Nomor Pelanggan" value={customerId} onChange={(e) => setCustomerId(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold" />
+                    <input type="text" placeholder="Nomor Pelanggan" value={customerId} onChange={(e) => setCustomerId(e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold" />
                     <button onClick={handleCheckBill} disabled={isChecking || !customerId || !areaCode} className="bg-slate-800 hover:bg-slate-900 text-white font-bold px-6 rounded-xl transition shadow-md disabled:bg-slate-400 disabled:cursor-not-allowed">
                       {isChecking ? "Cek..." : "Cek"}
                     </button>
@@ -269,7 +269,7 @@ export default function Pdam() {
                 )}
 
                 {billData && !errorMessage && (
-                  <div className="bg-emerald-50 border border-blue-100 p-4 rounded-xl mt-4 space-y-2 animate-fade-in">
+                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl mt-4 space-y-2 animate-fade-in">
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Nama Pelanggan</span><span className="font-bold text-slate-800">{billData.nama_pelanggan}</span></div>
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Periode Tagihan</span><span className="font-bold text-slate-800">{billData.periode}</span></div>
                     <div className="flex justify-between text-sm"><span className="text-slate-500">Jumlah Tagihan</span><span className="font-bold text-slate-800">{formatRupiah(billData.tagihan)}</span></div>
@@ -280,38 +280,38 @@ export default function Pdam() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
                   Pilih Pembayaran
                 </h3>
                 <button
                   onClick={() => setSelectedPayment({ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 })}
-                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-blue-500 bg-blue-50 ring-2 ring-blue-500 shadow-md"
                 >
                   <div className="flex justify-between items-center w-full mb-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
-                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-emerald-600">
-                      <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />
+                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-blue-600">
+                      <div className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
                     </div>
                   </div>
                   <div className="flex justify-between items-end w-full">
                     <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
-                    <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Gratis</p>
+                    <p className="text-xs font-black text-blue-600 bg-blue-100 px-2 py-1 rounded-md">Gratis</p>
                   </div>
                 </button>
               </div>
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
                   Kode Promo <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                 </h3>
 
                 {appliedPromo ? (
-                  <div className="rounded-xl p-3.5" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                  <div className="rounded-xl p-3.5" style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}>
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-bold text-emerald-700">✓ {appliedPromo}</p>
-                        <p className="text-xs mt-1 text-emerald-600">
+                        <p className="text-sm font-bold text-blue-700">✓ {appliedPromo}</p>
+                        <p className="text-xs mt-1 text-blue-600">
                           Diskon: {formatRupiah(discountAmount)}
                         </p>
                       </div>
@@ -331,7 +331,7 @@ export default function Pdam() {
                       placeholder="Masukkan kode promo"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition uppercase"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition uppercase"
                     />
                     <button
                       type="submit"
@@ -352,7 +352,7 @@ export default function Pdam() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span> 
                   Detail Kontak
                 </h3>
                 <input 
@@ -360,7 +360,7 @@ export default function Pdam() {
                   placeholder="Nomor WhatsApp (08...)" 
                   value={whatsapp || ""}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition" 
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" 
                 />
                 <p className="text-xs text-slate-400 mt-2">Bukti pembelian akan dikirimkan melalui WhatsApp.</p>
               </div>
@@ -368,7 +368,7 @@ export default function Pdam() {
 
             {/* TAB KETERANGAN (MOBILE) */}
             <div className={`${activeTab === "keterangan" ? "block animate-fade-in" : "hidden"} lg:hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200`}>
-              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">Cara Bayar PDAM</h3>
+              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">Cara Bayar PDAM</h3>
               <ol className="list-decimal ml-4 space-y-2 text-slate-600 text-sm font-medium">
                 <li>Pilih wilayah PDAM dan masukkan Nomor Pelanggan.</li>
                 <li>Klik tombol <b>Cek</b> untuk melihat total tagihan.</li>
@@ -384,7 +384,7 @@ export default function Pdam() {
             <div className="space-y-6 h-full">
               {/* DESKRIPSI KANAN */}
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">Cara Bayar PDAM</h3>
+                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">Cara Bayar PDAM</h3>
                 <ol className="list-decimal ml-4 space-y-2 text-slate-600 text-sm font-medium">
                   <li>Pilih wilayah PDAM dan masukkan Nomor Pelanggan.</li>
                   <li>Klik tombol <b>Cek</b> untuk melihat total tagihan.</li>
@@ -406,8 +406,8 @@ export default function Pdam() {
                       <div className="flex justify-between text-sm"><span className="text-slate-500">Admin Platform</span><span className="text-slate-800 font-bold">{formatRupiah(billData.admin_fee)}</span></div>
                       <div className="flex justify-between text-sm"><span className="text-slate-500">Biaya Transfer</span><span className="text-slate-800 font-bold">{formatRupiah(adminFee)}</span></div>
                     </div>
-                    <div className="flex justify-between items-center mb-6 pt-2 border-t border-slate-100"><span className="text-slate-800 font-bold">Total Bayar</span><span className="text-emerald-600 font-black text-xl">{formatRupiah(grandTotal)}</span></div>
-                    <button onClick={handleCheckout} disabled={!selectedPayment || !whatsapp || isCheckoutLoading} className={`w-full font-black py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 ${selectedPayment && whatsapp && !isCheckoutLoading ? "bg-emerald-600 hover:bg-blue-700 text-white shadow-emerald-600/30 cursor-pointer" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}>{isCheckoutLoading ? "Memproses..." : "Bayar Sekarang"}</button>
+                    <div className="flex justify-between items-center mb-6 pt-2 border-t border-slate-100"><span className="text-slate-800 font-bold">Total Bayar</span><span className="text-blue-600 font-black text-xl">{formatRupiah(grandTotal)}</span></div>
+                    <button onClick={handleCheckout} disabled={!selectedPayment || !whatsapp || isCheckoutLoading} className={`w-full font-black py-4 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 ${selectedPayment && whatsapp && !isCheckoutLoading ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30 cursor-pointer" : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"}`}>{isCheckoutLoading ? "Memproses..." : "Bayar Sekarang"}</button>
                   </>
                 )}
               </div>
@@ -421,9 +421,9 @@ export default function Pdam() {
         <div className="fixed bottom-0 left-0 w-full bg-white border-t border-slate-200 p-4 z-50 lg:hidden rounded-t-[2rem] shadow-[0_-10px_30px_rgba(0,0,0,0.06)] flex flex-col gap-3 transition-transform animate-slide-up">
           <div className="flex justify-between items-center px-2">
             <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Pembayaran</span>
-            <span className="text-xl font-black text-emerald-600">{formatRupiah(grandTotal)}</span>
+            <span className="text-xl font-black text-blue-600">{formatRupiah(grandTotal)}</span>
           </div>
-          <button onClick={handleCheckout} disabled={!selectedPayment || !whatsapp || isCheckoutLoading} className={`w-full font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide text-sm ${selectedPayment && whatsapp && !isCheckoutLoading ? "bg-emerald-600 hover:bg-blue-700 text-white shadow-lg shadow-emerald-600/30" : "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"}`}>{isCheckoutLoading ? "Memproses..." : "Bayar Sekarang!"}</button>
+          <button onClick={handleCheckout} disabled={!selectedPayment || !whatsapp || isCheckoutLoading} className={`w-full font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide text-sm ${selectedPayment && whatsapp && !isCheckoutLoading ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30" : "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"}`}>{isCheckoutLoading ? "Memproses..." : "Bayar Sekarang!"}</button>
         </div>
       )}
     </main>

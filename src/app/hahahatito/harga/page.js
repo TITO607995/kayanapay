@@ -314,7 +314,7 @@ function KelolaHargaContent() {
                         <td className="px-5 py-3.5 whitespace-nowrap">
                           <span className="font-medium text-slate-800 block">{item.product_name}</span>
                           {item.image_poster && (
-                            <span className={`mt-1 inline-block text-[10px] px-2 py-0.5 rounded-md font-medium border ${item.is_flash_sale ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
+                            <span className={`mt-1 inline-block text-[10px] px-2 py-0.5 rounded-md font-medium border ${item.is_flash_sale ? 'bg-blue-50 text-blue-700 border-emerald-200' : 'bg-slate-100 text-slate-500 border-slate-200'}`}>
                               {item.is_flash_sale ? 'Ada Poster' : 'Poster Tersimpan'}
                             </span>
                           )}

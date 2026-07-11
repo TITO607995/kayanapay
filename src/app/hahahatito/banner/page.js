@@ -235,7 +235,7 @@ export default function KelolaBannerPage() {
                   <div className="flex items-center justify-between">
                     <p className="text-xs text-slate-500">
                       Link: {bn.target_link
-                        ? <span className="text-emerald-600 font-medium">{bn.target_link}</span>
+                        ? <span className="text-blue-600 font-medium">{bn.target_link}</span>
                         : <span className="italic text-slate-400">–</span>
                       }
                     </p>

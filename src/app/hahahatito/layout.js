@@ -157,7 +157,7 @@ export default function AdminLayout({ children }) {
         {/* Logo */}
         <div className="h-14 flex items-center px-5 border-b border-slate-100">
           <span className="text-sm font-semibold text-slate-800 tracking-tight">
-            Kayana<span className="text-emerald-600">Admin</span>
+            Kayana<span className="text-blue-600">Admin</span>
           </span>
         </div>
 
@@ -215,7 +215,7 @@ export default function AdminLayout({ children }) {
 
           {/* Avatar */}
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs font-semibold">
+            <div className="w-7 h-7 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-semibold">
               T
             </div>
             <span className="text-sm text-slate-600 hidden sm:block">Tito</span>

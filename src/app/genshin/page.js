@@ -251,7 +251,7 @@ function GenshinImpact() {
     <main className="min-h-screen font-sans pb-36 lg:pb-20 bg-slate-50 relative">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         <div className="flex items-center gap-4 mb-8 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
-          <div className="relative w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100 overflow-hidden flex-shrink-0">
+          <div className="relative w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100 overflow-hidden flex-shrink-0">
             <Image
               src="/images/genshin.jpg"
               alt="Genshin Impact"
@@ -273,7 +273,7 @@ function GenshinImpact() {
                 onClick={() => setActiveTab("transaksi")}
                 className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${
                   activeTab === "transaksi"
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
                     : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                 }`}
               >
@@ -283,7 +283,7 @@ function GenshinImpact() {
                 onClick={() => setActiveTab("keterangan")}
                 className={`flex-1 py-3 font-bold rounded-xl transition-all text-sm ${
                   activeTab === "keterangan"
-                    ? "bg-emerald-600 text-white shadow-md shadow-emerald-600/30"
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30"
                     : "bg-slate-50 text-slate-500 hover:bg-slate-100"
                 }`}
               >
@@ -294,7 +294,7 @@ function GenshinImpact() {
             <div className={`space-y-6 ${activeTab === "transaksi" ? "block animate-fade-in" : "hidden lg:block"}`}>
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">1</span>
                   Masukkan Data Akun
                 </h3>
                 <div className="flex flex-col gap-1">
@@ -305,14 +305,14 @@ function GenshinImpact() {
                         placeholder="Masukkan UID"
                         value={userId}
                         onChange={(e) => setUserId(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                       />
                     </div>
                     <div className="w-1/2 md:w-1/3">
                       <select
                         value={zoneId}
                         onChange={(e) => setZoneId(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                       >
                         <option value="" disabled>
                           Pilih Server
@@ -332,7 +332,7 @@ function GenshinImpact() {
 
               <div id="step-nominal" className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">2</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">2</span>
                   Pilih Nominal Top Up
                 </h3>
                 {isLoading ? (
@@ -356,14 +356,14 @@ function GenshinImpact() {
                                 onClick={() => setSelectedDenom(item)}
                                 className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
                                   selectedDenom?.buyer_sku_code === item.buyer_sku_code
-                                    ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500 shadow-md"
-                                    : "border-slate-200 bg-white hover:border-emerald-300 hover:shadow-sm"
+                                    ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md"
+                                    : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
                                 }`}
                               >
                                 <p className="font-bold text-sm text-slate-800">
                                   {item.product_name.replace("GENSHIN IMPACT - ", "")}
                                 </p>
-                                <p className="text-xs font-black text-emerald-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                                <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
                               </button>
                             ))}
                         </div>
@@ -389,14 +389,14 @@ function GenshinImpact() {
                               onClick={() => setSelectedDenom(item)}
                               className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
                                 selectedDenom?.buyer_sku_code === item.buyer_sku_code
-                                  ? "border-emerald-500 bg-emerald-50 ring-1 ring-emerald-500 shadow-md"
-                                  : "border-slate-200 bg-white hover:border-emerald-300 hover:shadow-sm"
+                                  ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md"
+                                  : "border-slate-200 bg-white hover:border-blue-300 hover:shadow-sm"
                               }`}
                             >
                               <p className="font-bold text-sm text-slate-800">
                                 {item.product_name.replace("GENSHIN IMPACT - ", "")}
                               </p>
-                              <p className="text-xs font-black text-emerald-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                              <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
                             </button>
                           ))}
                       </div>
@@ -407,7 +407,7 @@ function GenshinImpact() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span>
                   Jumlah Pembelian
                 </h3>
                 <div className="flex items-center gap-4">
@@ -421,7 +421,7 @@ function GenshinImpact() {
                     type="number"
                     value={qty}
                     onChange={(e) => setQty(e.target.value > 0 ? parseInt(e.target.value) : 1)}
-                    className="w-20 text-center bg-white border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold shadow-inner"
+                    className="w-20 text-center bg-white border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 font-bold shadow-inner"
                   />
                   <button
                     onClick={() => setQty(qty + 1)}
@@ -434,22 +434,22 @@ function GenshinImpact() {
 
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">4</span>
                   Pilih Pembayaran
                 </h3>
                 <button
                   onClick={() => setSelectedPayment({ paymentMethod: "QRIS", paymentName: "QRIS All Payment", totalFee: 0 })}
-                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-emerald-500 bg-emerald-50 ring-2 ring-emerald-500 shadow-md"
+                  className="w-full p-4 rounded-xl border flex flex-col justify-center transition-all border-blue-500 bg-blue-50 ring-2 ring-blue-500 shadow-md"
                 >
                   <div className="flex justify-between items-center w-full mb-3">
                     <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo_QRIS.svg" alt="QRIS" className="h-8 object-contain" />
-                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-emerald-600">
-                      <div className="w-2.5 h-2.5 bg-emerald-600 rounded-full" />
+                    <div className="w-5 h-5 rounded-full border-2 flex items-center justify-center border-blue-600">
+                      <div className="w-2.5 h-2.5 bg-blue-600 rounded-full" />
                     </div>
                   </div>
                   <div className="flex justify-between items-end w-full">
                     <p className="font-bold text-sm text-slate-800">QRIS All Payment</p>
-                    <p className="text-xs font-black text-emerald-600 bg-emerald-100 px-2 py-1 rounded-md">Gratis</p>
+                    <p className="text-xs font-black text-blue-600 bg-blue-100 px-2 py-1 rounded-md">Gratis</p>
                   </div>
                 </button>
               </div>
@@ -457,16 +457,16 @@ function GenshinImpact() {
               {/* STEP 5: Kode Promo */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">5</span>
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">5</span>
                   Kode Promo <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                 </h3>
 
                 {appliedPromo ? (
-                  <div className="rounded-xl p-3.5" style={{ background: "#ECFDF5", border: "1px solid #A7F3D0" }}>
+                  <div className="rounded-xl p-3.5" style={{ background: "#EFF6FF", border: "1px solid #BFDBFE" }}>
                     <div className="flex items-center justify-between gap-3">
                       <div>
-                        <p className="text-sm font-bold text-emerald-700">✓ {appliedPromo}</p>
-                        <p className="text-xs mt-1 text-emerald-600">
+                        <p className="text-sm font-bold text-blue-700">✓ {appliedPromo}</p>
+                        <p className="text-xs mt-1 text-blue-600">
                           Diskon: {formatRupiah(discountAmount)}
                         </p>
                       </div>
@@ -486,7 +486,7 @@ function GenshinImpact() {
                       placeholder="Masukkan kode promo"
                       value={promoCode}
                       onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
-                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition uppercase"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition uppercase"
                     />
                     <button
                       type="submit"
@@ -505,7 +505,7 @@ function GenshinImpact() {
               {!isMemberLoading && memberData && (
                 <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                   <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                    <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">6</span>
+                    <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">6</span>
                     Koin KayanaPay <span className="text-xs font-normal text-slate-400 ml-2">(Opsional)</span>
                   </h3>
 
@@ -574,7 +574,7 @@ function GenshinImpact() {
               {/* STEP 6/7: Detail Kontak — nomor menyesuaikan ada-tidaknya step koin */}
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
-                  <span className="bg-emerald-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">
+                  <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">
                     {memberData ? "7" : "6"}
                   </span>
                   Detail Kontak
@@ -584,7 +584,7 @@ function GenshinImpact() {
                   placeholder="Contoh: 0812..."
                   value={whatsapp}
                   onChange={(e) => setWhatsapp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 />
                 <p className="text-xs text-slate-400 mt-2">
                   Bukti pembelian akan dikirimkan melalui WhatsApp.
@@ -593,7 +593,7 @@ function GenshinImpact() {
             </div>
 
             <div className={`${activeTab === "keterangan" ? "block animate-fade-in" : "hidden"} lg:hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200`}>
-              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">
+              <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">
                 Deskripsi Genshin Impact
               </h3>
               <p className="text-slate-600 text-sm leading-relaxed mb-6">
@@ -616,7 +616,7 @@ function GenshinImpact() {
           <div className="hidden lg:block lg:col-span-1 relative">
             <div className="space-y-6 h-full">
               <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
-                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3 uppercase">
+                <h3 className="font-black text-lg text-slate-800 mb-4 border-l-4 border-blue-500 pl-3 uppercase">
                   Deskripsi Genshin Impact
                 </h3>
                 <p className="text-slate-600 text-sm leading-relaxed mb-6">
@@ -638,7 +638,7 @@ function GenshinImpact() {
                 <h3 className="font-black text-lg text-slate-800 border-b border-slate-100 pb-4 mb-4">Rincian Pesanan</h3>
 
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="relative w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100 overflow-hidden flex-shrink-0">
+                  <div className="relative w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100 overflow-hidden flex-shrink-0">
                     <Image
                       src="/images/genshin.jpg"
                       alt="Genshin Impact"
@@ -672,7 +672,7 @@ function GenshinImpact() {
                   {discountAmount > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-slate-500 font-medium">Diskon Promo</span>
-                      <span className="text-emerald-600 font-bold">-{formatRupiah(discountAmount)}</span>
+                      <span className="text-blue-600 font-bold">-{formatRupiah(discountAmount)}</span>
                     </div>
                   )}
                   {useKoin && koinDigunakan > 0 && (
@@ -690,7 +690,7 @@ function GenshinImpact() {
 
                 <div className="flex justify-between items-center mb-6 pt-2">
                   <span className="text-slate-800 font-bold">Total Bayar</span>
-                  <span className="text-emerald-600 font-black text-xl">
+                  <span className="text-blue-600 font-black text-xl">
                     {selectedDenom ? formatRupiah(finalTotal) : "-"}
                   </span>
                 </div>
@@ -699,7 +699,7 @@ function GenshinImpact() {
                   onClick={handleCheckout}
                   className={`w-full font-black py-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 ${
                     selectedDenom && selectedPayment && userId && zoneId && whatsapp && !isCheckoutLoading
-                      ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-emerald-600/30 cursor-pointer"
+                      ? "bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30 cursor-pointer"
                       : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                   }`}
                   disabled={!selectedDenom || !selectedPayment || !userId || !zoneId || !whatsapp || isCheckoutLoading}
@@ -733,7 +733,7 @@ function GenshinImpact() {
         ) : (
           <div className="flex justify-between items-center px-2">
             <span className="text-xs text-slate-500 font-bold uppercase tracking-wider">Total Pembayaran</span>
-            <span className="text-xl font-black text-emerald-600">{formatRupiah(finalTotal)}</span>
+            <span className="text-xl font-black text-blue-600">{formatRupiah(finalTotal)}</span>
           </div>
         )}
 
@@ -742,7 +742,7 @@ function GenshinImpact() {
           disabled={!selectedDenom || !selectedPayment || !userId || !zoneId || !whatsapp || isCheckoutLoading}
           className={`w-full font-black py-4 rounded-xl transition-all flex items-center justify-center gap-2 uppercase tracking-wide text-sm ${
             selectedDenom && selectedPayment && userId && zoneId && whatsapp && !isCheckoutLoading
-              ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg shadow-emerald-600/30"
+              ? "bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/30"
               : "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
           }`}
         >

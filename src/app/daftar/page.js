@@ -82,7 +82,7 @@ export default function DaftarPage() {
       
       {/* 🟢 NOTIFIKASI SUKSES 🟢 */}
       {successMessage && (
-        <div className="fixed top-10 left-1/2 -translate-x-1/2 bg-emerald-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3 z-50 animate-bounce">
+        <div className="fixed top-10 left-1/2 -translate-x-1/2 bg-blue-500 text-white px-6 py-3 rounded-full shadow-lg flex items-center gap-3 z-50 animate-bounce">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
           <span className="font-bold text-sm">{successMessage}</span>
         </div>
@@ -92,7 +92,7 @@ export default function DaftarPage() {
 
         {/* Logo */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-black text-emerald-600 italic tracking-wider">
+          <h1 className="text-4xl font-black text-blue-600 italic tracking-wider">
             KAYANAPAY<span className="text-sky-400">.</span>
           </h1>
           <p className="text-slate-500 text-sm mt-3">Daftar akun baru untuk transaksi lebih cepat</p>
@@ -112,26 +112,26 @@ export default function DaftarPage() {
             {/* Nama */}
             <div>
               <label className="text-sm text-slate-600 font-medium mb-2 block">Nama Lengkap</label>
-              <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Nama lengkap" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-blue-100" />
+              <input type="text" name="name" required value={formData.name} onChange={handleChange} placeholder="Nama lengkap" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
             </div>
 
             {/* Username */}
             <div>
               <label className="text-sm text-slate-600 font-medium mb-2 block">Username</label>
-              <input type="text" name="username" required value={formData.username} onChange={handleChange} placeholder="Buat username (Tanpa spasi)" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-blue-100 lowercase" />
+              <input type="text" name="username" required value={formData.username} onChange={handleChange} placeholder="Buat username (Tanpa spasi)" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100 lowercase" />
             </div>
 
             {/* WhatsApp */}
             <div>
               <label className="text-sm text-slate-600 font-medium mb-2 block">Nomor WhatsApp</label>
-              <input type="number" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="08123456789" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-blue-100" />
+              <input type="number" name="whatsapp" required value={formData.whatsapp} onChange={handleChange} placeholder="08123456789" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
             </div>
 
             {/* Password */}
             <div>
               <label className="text-sm text-slate-600 font-medium mb-2 block">Password</label>
               <div className="relative">
-                <input type={showPassword ? "text" : "password"} name="password" required minLength="6" value={formData.password} onChange={handleChange} placeholder="Minimal 6 karakter" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-blue-100" />
+                <input type={showPassword ? "text" : "password"} name="password" required minLength="6" value={formData.password} onChange={handleChange} placeholder="Minimal 6 karakter" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
                 <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   {showPassword ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
@@ -146,7 +146,7 @@ export default function DaftarPage() {
             <div>
               <label className="text-sm text-slate-600 font-medium mb-2 block">Konfirmasi Password</label>
               <div className="relative">
-                <input type={showConfirm ? "text" : "password"} name="password_confirmation" required value={formData.password_confirmation} onChange={handleChange} placeholder="Ulangi password" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-emerald-500 focus:ring-4 focus:ring-blue-100" />
+                <input type={showConfirm ? "text" : "password"} name="password_confirmation" required value={formData.password_confirmation} onChange={handleChange} placeholder="Ulangi password" className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100" />
                 <button type="button" onClick={() => setShowConfirm(!showConfirm)} className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                   {showConfirm ? (
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" /></svg>
@@ -158,7 +158,7 @@ export default function DaftarPage() {
             </div>
 
             {/* Button Submit Manual */}
-            <button type="submit" disabled={isLoading} className="w-full bg-emerald-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-emerald-600/30 disabled:bg-blue-400">
+            <button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition shadow-lg shadow-blue-600/30 disabled:bg-blue-400">
               {isLoading ? "Mendaftar..." : "Daftar Sekarang"}
             </button>
           </form>
@@ -187,7 +187,7 @@ export default function DaftarPage() {
 
           <div className="mt-6 text-center text-sm text-slate-500">
             Sudah punya akun?{" "}
-            <Link href="/masuk" className="text-emerald-600 font-semibold hover:underline">Masuk</Link>
+            <Link href="/masuk" className="text-blue-600 font-semibold hover:underline">Masuk</Link>
           </div>
         </div>
       </div>

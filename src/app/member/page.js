@@ -71,7 +71,7 @@ export default function MemberDashboard() {
 
   // Redesigned: Premium Soft Status Badges
   const getStatusStyle = (status) => {
-    if (status === 'SUKSES') return 'bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-600/20';
+    if (status === 'SUKSES') return 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/20';
     if (status === 'PENDING' || status === 'UNPAID') return 'bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-600/20';
     return 'bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-600/20';
   };
@@ -149,7 +149,7 @@ export default function MemberDashboard() {
           </div>
           <div className="bg-white p-6 rounded-[20px] border border-slate-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] flex flex-col justify-center gap-2">
             <div className="flex items-center gap-2 mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
               <p className="text-[12px] text-slate-500 font-medium uppercase tracking-wider">Sukses</p>
             </div>
             <p className="text-2xl font-semibold text-slate-900">{statistik.sukses}</p>
