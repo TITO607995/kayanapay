@@ -432,14 +432,22 @@ function MobileLegendsContent() {
                   <p className="text-sm text-center py-8 animate-pulse" style={{ color: "var(--text-tertiary)" }}>Mengambil daftar harga...</p>
                 ) : (
                   <div className="space-y-5">
-                    {products.filter(p => p.product_name.toLowerCase().includes("weekly") || p.product_name.toLowerCase().includes("pass")).length > 0 && (
+                    
+                    {/* --- KATEGORI 1: MEMBERSHIP & PASS --- */}
+                    {products.filter(p => {
+                      const name = p.product_name.toLowerCase();
+                      return name.includes("weekly") || name.includes("pass") || name.includes("starlight") || name.includes("monthly") || name.includes("bundle");
+                    }).length > 0 && (
                       <div>
                         <p className="text-xs font-medium uppercase tracking-wider mb-3 flex items-center gap-2" style={{ color: "var(--text-tertiary)" }}>
-                          🎟️ Weekly Pass <span className="flex-1 h-px" style={{ background: "var(--border)" }}></span>
+                          🎟️ Membership & Pass <span className="flex-1 h-px" style={{ background: "var(--border)" }}></span>
                         </p>
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                           {products
-                            .filter(p => p.product_name.toLowerCase().includes("weekly") || p.product_name.toLowerCase().includes("pass"))
+                            .filter(p => {
+                              const name = p.product_name.toLowerCase();
+                              return name.includes("weekly") || name.includes("pass") || name.includes("starlight") || name.includes("monthly") || name.includes("bundle");
+                            })
                             .sort((a, b) => a.price_sell - b.price_sell)
                             .map(item => (
                               <DenomBtn key={item.buyer_sku_code} item={item} selected={selectedDenom} onSelect={setSelectedDenom} />
@@ -447,19 +455,26 @@ function MobileLegendsContent() {
                         </div>
                       </div>
                     )}
+                    
+                    {/* --- KATEGORI 2: DIAMONDS (Sisa Produk) --- */}
                     <div>
                       <p className="text-xs font-medium uppercase tracking-wider mb-3 flex items-center gap-2" style={{ color: "var(--text-tertiary)" }}>
                         💎 Diamonds <span className="flex-1 h-px" style={{ background: "var(--border)" }}></span>
                       </p>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                         {products
-                          .filter(p => !p.product_name.toLowerCase().includes("weekly") && !p.product_name.toLowerCase().includes("pass") && !p.product_name.toLowerCase().includes("cek"))
+                          .filter(p => {
+                            const name = p.product_name.toLowerCase();
+                            // Kecualikan semua kata kunci membership agar masuk ke sini
+                            return !name.includes("weekly") && !name.includes("pass") && !name.includes("starlight") && !name.includes("monthly") && !name.includes("bundle") && !name.includes("cek");
+                          })
                           .sort((a, b) => a.price_sell - b.price_sell)
                           .map(item => (
                             <DenomBtn key={item.buyer_sku_code} item={item} selected={selectedDenom} onSelect={setSelectedDenom} />
                           ))}
                       </div>
                     </div>
+
                   </div>
                 )}
               </Card>

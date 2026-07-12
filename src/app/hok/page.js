@@ -317,30 +317,73 @@ function HonorOfKings() {
                   <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">2</span> 
                   Pilih Nominal Top Up
                 </h3>
+                
                 {isLoading ? (
                   <div className="text-center py-10"><p className="text-slate-500 animate-pulse font-semibold">Mengambil daftar harga...</p></div>
                 ) : (
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {products
-                      .sort((a, b) => a.price_sell - b.price_sell)
-                      .map((item) => (
-                      <button 
-                        key={item.buyer_sku_code}
-                        onClick={() => setSelectedDenom(item)}
-                        className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
-                          selectedDenom?.buyer_sku_code === item.buyer_sku_code 
-                          ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md" 
-                          : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
-                        }`}
-                      >
-                        <p className="font-bold text-sm text-slate-800">{item.product_name.replace("HONOR OF KINGS - ", "")}</p>
-                        <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
-                      </button>
-                    ))}
+                  <div className="space-y-6">
+                    
+                    {/* --- KATEGORI 1: WEEKLY CARD --- */}
+                    {products.filter(p => p.product_name.toLowerCase().includes("weekly")).length > 0 && (
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2 text-slate-500">
+                          🎟️ Weekly Card <span className="flex-1 h-px bg-slate-200"></span>
+                        </p>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                          {products
+                            .filter(p => p.product_name.toLowerCase().includes("weekly"))
+                            .sort((a, b) => a.price_sell - b.price_sell)
+                            .map((item) => (
+                              <button 
+                                key={item.buyer_sku_code}
+                                onClick={() => setSelectedDenom(item)}
+                                className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
+                                  selectedDenom?.buyer_sku_code === item.buyer_sku_code 
+                                  ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md" 
+                                  : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
+                                }`}
+                              >
+                                <p className="font-bold text-sm text-slate-800">{item.product_name.replace("HONOR OF KINGS - ", "")}</p>
+                                <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* --- KATEGORI 2: TOKENS --- */}
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-wider mb-3 flex items-center gap-2 text-slate-500">
+                        🪙 Tokens <span className="flex-1 h-px bg-slate-200"></span>
+                      </p>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {products
+                          .filter(p => {
+                            const name = p.product_name.toLowerCase();
+                            return !name.includes("weekly") && !name.includes("cek");
+                          })
+                          .sort((a, b) => a.price_sell - b.price_sell)
+                          .map((item) => (
+                            <button 
+                              key={item.buyer_sku_code}
+                              onClick={() => setSelectedDenom(item)}
+                              className={`p-4 rounded-xl border text-left transition-all flex flex-col justify-between h-full ${
+                                selectedDenom?.buyer_sku_code === item.buyer_sku_code 
+                                ? "border-blue-500 bg-blue-50 ring-1 ring-blue-500 shadow-md" 
+                                : "border-slate-200 bg-slate-50 hover:border-blue-300 hover:shadow-sm"
+                              }`}
+                            >
+                              <p className="font-bold text-sm text-slate-800">{item.product_name.replace("HONOR OF KINGS - ", "")}</p>
+                              <p className="text-xs font-black text-blue-600 mt-1">{formatRupiah(item.price_sell)}</p>
+                            </button>
+                          ))}
+                      </div>
+                    </div>
+
                   </div>
                 )}
               </div>
-
+              
               <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                 <h3 className="font-bold text-lg mb-4 flex items-center gap-2">
                   <span className="bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-sm shadow-md">3</span> 
